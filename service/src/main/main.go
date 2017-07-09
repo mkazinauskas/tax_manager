@@ -9,5 +9,4 @@ func main() {
 	data.Do()
 
 	api.Initialize()
-
 }
