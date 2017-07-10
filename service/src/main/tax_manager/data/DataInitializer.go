@@ -1,10 +1,19 @@
 package data
 
 import (
-	"main/tax_manager/domain"
-	"main/tax_manager/domain/repositories"
+	"main/tax_manager/domain/municipality"
+	"fmt"
 )
 
-func Do(){
-	repositories.Save(domain.Tax{Id:15, Value: 0.4})
+func InitDefaultData() {
+	createMunicipality("Vilnius")
+	createMunicipality("Kaunas")
+}
+
+func createMunicipality(name string) {
+	existingMunicipality := municipality.FindByName(name)
+	fmt.Println(existingMunicipality)
+	if existingMunicipality == nil {
+		municipality.Save(municipality.Municipality{Name: name})
+	}
 }

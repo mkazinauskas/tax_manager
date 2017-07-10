@@ -1,0 +1,6 @@
+CREATE TABLE municipalities(
+   ID   INT              NOT NULL AUTO_INCREMENT,
+   NAME VARCHAR (20)     NOT NULL,
+   PRIMARY KEY (ID),
+   UNIQUE(NAME)
+);

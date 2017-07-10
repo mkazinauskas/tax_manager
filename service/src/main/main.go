@@ -8,10 +8,9 @@ import (
 
 func init(){
 	datasource.CheckConnection()
+	data.InitDefaultData()
 }
 
 func main() {
-	data.Do()
-
 	api.Initialize()
 }
