@@ -6,6 +6,7 @@ import (
 
 type Tax struct {
 	Id       int
+	Municipality Municipality
 	Duration time.Duration
-	Value    int
+	Value    float64
 }

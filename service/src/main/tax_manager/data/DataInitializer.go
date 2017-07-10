@@ -1,7 +1,10 @@
 package data
 
-import "main/tax_manager/domain"
+import (
+	"main/tax_manager/domain"
+	"main/tax_manager/domain/repositories"
+)
 
 func Do(){
-	taxRepo.Save(domain.Tax{15, "Test"})
+	repositories.Save(domain.Tax{Id:15, Value: 0.4})
 }
