@@ -6,8 +6,27 @@ import (
 )
 
 type Tax struct {
-	Id       int
+	Id           int
 	Municipality municipality.Municipality
-	Duration time.Duration
-	Value    float64
+	Duration     time.Duration
+	Type         TaxType
+	Value        float64
+}
+
+type TaxType string
+
+const (
+	YEARLY  TaxType = "yearly"
+	MONTHLY TaxType = "monthly"
+	DAILY   TaxType = "daily"
+)
+
+var taxTypes = map[string]TaxType{
+	YEARLY:  YEARLY,
+	MONTHLY: MONTHLY,
+	DAILY:   DAILY,
+}
+
+func (TaxType) findByValue(value string) (TaxType) {
+	return taxTypes[value]
 }

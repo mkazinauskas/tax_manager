@@ -21,7 +21,7 @@ func FindByName(name string) (*Municipality) {
 }
 
 func mapTo(result *sql.Rows) (*Municipality) {
-	if (result.Next()) {
+	if result.Next() {
 		var id int64
 		var name string
 		result.Scan(&id, &name)
