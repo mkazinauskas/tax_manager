@@ -7,7 +7,7 @@ import (
 )
 
 func init(){
-	datasource.CheckConnection()
+	datasource.Database{}.CheckConnection()
 	data.InitDefaultData()
 }
 

@@ -7,7 +7,10 @@ import (
 	"fmt"
 )
 
-func CheckConnection() {
+type Database struct {
+}
+
+func (Database) CheckConnection() {
 	db := acquireConnection()
 	err := db.Ping()
 	if err != nil {
@@ -16,7 +19,7 @@ func CheckConnection() {
 	closeConnection(db)
 }
 
-func Execute(query string, args ... interface{}) (sql.Result) {
+func (Database) Execute(query string, args ... interface{}) (sql.Result) {
 	fmt.Println(query, args)
 	db := acquireConnection()
 	stmt, prepareError := db.Prepare(query)
@@ -28,7 +31,7 @@ func Execute(query string, args ... interface{}) (sql.Result) {
 	return result
 }
 
-func Query(query string, args ... interface{}) (*sql.Rows) {
+func (Database) Query(query string, args ... interface{}) (*sql.Rows) {
 	fmt.Println(query, args)
 	db := acquireConnection()
 	stmt, prepareError := db.Prepare(query)
@@ -41,7 +44,7 @@ func Query(query string, args ... interface{}) (*sql.Rows) {
 }
 
 func acquireConnection() *sql.DB {
-	db, fault := sql.Open("mysql", "root:@/tax_manager")
+	db, fault := sql.Open("mysql", "root:@/tax_manager?charset=utf8&parseTime=True&loc=Local")
 	utils.Check(fault)
 	return db
 }
@@ -49,5 +52,3 @@ func acquireConnection() *sql.DB {
 func closeConnection(db *sql.DB) {
 	db.Close()
 }
-
-

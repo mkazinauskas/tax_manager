@@ -7,16 +7,20 @@ import (
 	"database/sql"
 )
 
-func Save(municipality Municipality) (Municipality) {
-	result := datasource.Execute("INSERT municipalities SET name=?", municipality.Name)
+type MunicipalityRepository struct {
+	database datasource.Database
+}
+
+func (this *MunicipalityRepository) Save(municipality Municipality) (Municipality) {
+	result := this.database.Execute("INSERT municipalities SET name=?", municipality.Name)
 	id, err := result.LastInsertId()
 	utils.Check(err)
 
 	return Municipality{Id: id, Name: municipality.Name}
 }
 
-func FindByName(name string) (*Municipality) {
-	result := datasource.Query("SELECT * FROM municipalities WHERE name=?", name)
+func (this *MunicipalityRepository) FindByName(name string) (*Municipality) {
+	result := this.database.Query("SELECT * FROM municipalities WHERE name=?", name)
 	return mapTo(result)
 }
 

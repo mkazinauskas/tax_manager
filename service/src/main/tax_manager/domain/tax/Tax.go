@@ -2,15 +2,15 @@ package tax
 
 import (
 	"time"
-	"main/tax_manager/domain/municipality"
 )
 
 type Tax struct {
-	Id           int
-	Municipality municipality.Municipality
-	Duration     time.Duration
-	Type         TaxType
-	Value        float64
+	Id             int64
+	MunicipalityId int64
+	From           time.Time
+	To             time.Time
+	TaxType        TaxType
+	Value          float64
 }
 
 type TaxType string
@@ -18,15 +18,17 @@ type TaxType string
 const (
 	YEARLY  TaxType = "yearly"
 	MONTHLY TaxType = "monthly"
+	WEEKLY  TaxType = "weekly"
 	DAILY   TaxType = "daily"
 )
 
 var taxTypes = map[string]TaxType{
 	YEARLY:  YEARLY,
 	MONTHLY: MONTHLY,
+	WEEKLY:  WEEKLY,
 	DAILY:   DAILY,
 }
 
-func (TaxType) findByValue(value string) (TaxType) {
+func FindByValue(value string) (TaxType) {
 	return taxTypes[value]
 }
