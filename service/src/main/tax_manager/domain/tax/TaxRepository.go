@@ -11,7 +11,7 @@ type TaxRepository struct {
 	database datasource.Database
 }
 
-func (this *TaxRepository) Save(tax Tax) {
+func (this TaxRepository) Save(tax Tax) {
 	this.database.Execute("INSERT `TAXES` SET `MUNICIPALITY_ID`=?,`FROM`=?,`TO`=?,`TAX_TYPE`=?,`VALUE`=?",
 		tax.MunicipalityId,
 		tax.From.Format("yyyy-MM-dd"),
@@ -42,7 +42,7 @@ func mapTo(result *sql.Rows) (*Tax) {
 			MunicipalityId: municipalityId,
 			From:           parsedFrom,
 			To:             parsedTo,
-			TaxType:        FindByValue(taxType),
+			TaxType:        FindTaxTypeByValue(taxType),
 			Value:          value}
 	} else {
 		return nil

@@ -1,0 +1,5 @@
+municipality,date_from,date_to,tax_type,value
+Vilnius,2016.01.01,2016.12.31,yearly,0.2
+Vilnius,2016.05.01,2016.05.31,monthly,0.4
+Vilnius,2016.01.01,2016.12.25,daily,0.1
+Kaunas,2016.01.01,2016.12.31,yearly,0.5

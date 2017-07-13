@@ -2,6 +2,8 @@ package tax
 
 import (
 	"time"
+	"fmt"
+	"errors"
 )
 
 type Tax struct {
@@ -22,13 +24,17 @@ const (
 	DAILY   TaxType = "daily"
 )
 
-var taxTypes = map[string]TaxType{
-	YEARLY:  YEARLY,
-	MONTHLY: MONTHLY,
-	WEEKLY:  WEEKLY,
-	DAILY:   DAILY,
-}
-
-func FindByValue(value string) (TaxType) {
-	return taxTypes[value]
+func FindTaxTypeByValue(value string) (TaxType) {
+	switch value {
+	case string(YEARLY):
+		return YEARLY
+	case string(MONTHLY):
+		return MONTHLY
+	case string(WEEKLY):
+		return WEEKLY
+	case string(DAILY):
+		return DAILY
+	default:
+		panic(errors.New(fmt.Sprintf("Tax type not found by value %s", value)))
+	}
 }
