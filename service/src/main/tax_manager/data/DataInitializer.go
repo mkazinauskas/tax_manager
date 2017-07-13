@@ -11,9 +11,9 @@ func InitDefaultData() {
 }
 
 func createMunicipality(name string) {
-	existingMunicipality := municipality.FindByName(name)
+	existingMunicipality := municipality.MunicipalityRepository{}.FindByName(name)
 	fmt.Println(existingMunicipality)
 	if existingMunicipality == nil {
-		municipality.Save(municipality.Municipality{Name: name})
+		municipality.MunicipalityRepository{}.Save(municipality.Municipality{Name: name})
 	}
 }

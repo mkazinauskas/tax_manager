@@ -7,21 +7,26 @@ import (
 	"fmt"
 )
 
+const (
+	driverName     = "mysql"
+	dataSourceName = "root:@/tax_manager?charset=utf8&parseTime=True&loc=Local"
+)
+
 type Database struct {
 }
 
-func (Database) CheckConnection() {
-	db := acquireConnection()
+func (this Database) CheckConnection() {
+	db := this.acquireConnection()
 	err := db.Ping()
 	if err != nil {
 		panic(err.Error())
 	}
-	closeConnection(db)
+	this.closeConnection(db)
 }
 
-func (Database) Execute(query string, args ... interface{}) (sql.Result) {
+func (this Database) Execute(query string, args ... interface{}) (sql.Result) {
 	fmt.Println(query, args)
-	db := acquireConnection()
+	db := this.acquireConnection()
 	stmt, prepareError := db.Prepare(query)
 	utils.Check(prepareError)
 
@@ -31,9 +36,9 @@ func (Database) Execute(query string, args ... interface{}) (sql.Result) {
 	return result
 }
 
-func (Database) Query(query string, args ... interface{}) (*sql.Rows) {
+func (this Database) Query(query string, args ... interface{}) (*sql.Rows) {
 	fmt.Println(query, args)
-	db := acquireConnection()
+	db := this.acquireConnection()
 	stmt, prepareError := db.Prepare(query)
 	utils.Check(prepareError)
 
@@ -43,12 +48,12 @@ func (Database) Query(query string, args ... interface{}) (*sql.Rows) {
 	return result
 }
 
-func acquireConnection() *sql.DB {
-	db, fault := sql.Open("mysql", "root:@/tax_manager?charset=utf8&parseTime=True&loc=Local")
+func (Database) acquireConnection() *sql.DB {
+	db, fault := sql.Open(driverName, dataSourceName)
 	utils.Check(fault)
 	return db
 }
 
-func closeConnection(db *sql.DB) {
+func (Database) closeConnection(db *sql.DB) {
 	db.Close()
 }
