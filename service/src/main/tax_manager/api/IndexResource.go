@@ -6,6 +6,6 @@ import (
 	"fmt"
 )
 
-func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func GetIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "Welcome!\n")
 }

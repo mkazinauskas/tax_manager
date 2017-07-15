@@ -8,6 +8,11 @@ import (
 
 func Initialize() {
 	router := httprouter.New()
-	router.GET("/", Index)
+	router.GET("/", GetIndex)
+	router.GET("/municipalities", GetAllMunicipalities)
+	router.GET("/municipalities/:id", GetMunicipalityById)
+	router.GET("/municipalities/:id/taxes", GetTaxes)
+	router.GET("/calculate-tax", CalculateTax)
+
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
