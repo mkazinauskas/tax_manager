@@ -21,12 +21,17 @@ func (this TaxRepository) Save(tax Tax) {
 		tax.Value)
 }
 
-func (this *TaxRepository) FindTaxByMunicipalityId(id int64, taxType TaxType) (*[]Tax) {
-	result := this.database.Query("SELECT * FROM `TAXES` WHERE `MUNICIPALITY_ID`=? AND `TAX_TYPE=?`", id, string(taxType))
+func (this *TaxRepository) FindTaxByMunicipalityIdAndTaxType(id int64, taxType TaxType) (Tax) {
+	result := this.database.Query("SELECT * FROM `TAXES` WHERE `MUNICIPALITY_ID`=? AND `TAX_TYPE`=?", id, string(taxType))
+	return mapTo(result)[0]
+}
+
+func (this *TaxRepository) FindTaxByMunicipality(id int64) ([]Tax) {
+	result := this.database.Query("SELECT * FROM `TAXES` WHERE `MUNICIPALITY_ID`=?", id)
 	return mapTo(result)
 }
 
-func mapTo(result *sql.Rows) (*[]Tax) {
+func mapTo(result *sql.Rows) ([]Tax) {
 	foundTaxes := []Tax{}
 	for result.Next() {
 		var id int64
@@ -47,6 +52,5 @@ func mapTo(result *sql.Rows) (*[]Tax) {
 			TaxType:        FindTaxTypeByValue(taxType),
 			Value:          value})
 	}
-	return &foundTaxes
-
+	return foundTaxes
 }
