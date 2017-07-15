@@ -13,6 +13,7 @@ func Initialize() {
 	router.POST("/municipalities", SaveNewMunicipality)
 	router.GET("/municipalities/:id", GetMunicipalityById)
 	router.GET("/municipalities/:id/taxes", GetAllTaxes)
+	router.POST("/municipalities/:id/taxes", SaveNewMunicipalityTax)
 	router.GET("/municipalities/:id/taxes/:tax-id", GetTaxById)
 	router.GET("/calculate-tax", CalculateTax)
 
