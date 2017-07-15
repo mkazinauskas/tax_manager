@@ -26,6 +26,11 @@ func (this TaxRepository) FindTaxByMunicipalityIdAndTaxType(id int64, taxType Ta
 	return this.takeFirst(mapTo(result))
 }
 
+func (this TaxRepository) FindTaxByMunicipalityIdAndTaxId(municipalityId int64, taxId int64) (*Tax) {
+	result := this.database.Query("SELECT * FROM `TAXES` WHERE `MUNICIPALITY_ID`=? AND `ID`=?", municipalityId, taxId)
+	return this.takeFirst(mapTo(result))
+}
+
 func (TaxRepository) takeFirst(taxes []Tax) (*Tax) {
 	if len(taxes) == 1 {
 		return &taxes[0]
