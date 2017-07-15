@@ -12,13 +12,13 @@ type SaveMunicipalityAndTax struct {
 
 func (this SaveMunicipalityAndTax) Save() {
 	savedMunicipality := municipality.MunicipalityRepository{}.FindByName(this.MunicipalityToSave.Name)
-	if &savedMunicipality == nil {
+	if savedMunicipality == nil {
 		savedMunicipality = municipality.MunicipalityRepository{}.Save(this.MunicipalityToSave)
 	}
 
 	this.TaxToSave.MunicipalityId = savedMunicipality.Id
 	existingTaxes := taxRepository.FindTaxByMunicipalityIdAndTaxType(savedMunicipality.Id, this.TaxToSave.TaxType)
-	if &existingTaxes == nil {
+	if existingTaxes == nil {
 		taxRepository.Save(this.TaxToSave)
 	}
 }

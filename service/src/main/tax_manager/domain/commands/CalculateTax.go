@@ -11,7 +11,10 @@ var taxRepository = tax.TaxRepository{}
 
 func Calculate(municipality string, date time.Time) (rate float32) {
 	//foundMunicipality := municipalityRepository.FindByName(municipality)
-//	foundTaxes := taxRepository.FindTaxByMunicipalityIdAndTaxType(foundMunicipality.Id)
-
+	//foundTaxes := taxRepository.FindTaxByMunicipalityId(foundMunicipality.Id)
+	//
+	//for _, tax := range foundTaxes {
+	//
+	//}
 	return
 }
