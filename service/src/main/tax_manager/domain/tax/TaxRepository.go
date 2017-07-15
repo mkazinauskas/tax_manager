@@ -48,7 +48,7 @@ func (this TaxRepository) DeleteAll() {
 	this.database.Query("DELETE FROM `TAXES`")
 }
 
-func (this TaxRepository) DeleteById(tax Tax) {
+func (this TaxRepository) Delete(tax Tax) {
 	this.database.Query("DELETE FROM `TAXES` WHERE `ID`=?", tax.Id)
 }
 

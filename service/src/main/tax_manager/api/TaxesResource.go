@@ -42,6 +42,29 @@ func GetTaxById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprint(w, Marshal(foundTax))
 }
 
+func DeleteTaxById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	municipalityId, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
+	utils.Check(err)
+
+	taxId, err := strconv.ParseInt(ps.ByName("tax-id"), 10, 64)
+	utils.Check(err)
+
+	foundMunicipality := municipality.MunicipalityRepository{}.FindById(municipalityId)
+	if foundMunicipality == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	foundTax := tax.TaxRepository{}.FindTaxByMunicipalityIdAndTaxId(municipalityId, taxId)
+	if foundTax == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	tax.TaxRepository{}.Delete(*foundTax)
+
+	w.WriteHeader(http.StatusNoContent)
+}
+
 type SaveTaxRequest struct {
 	From    string
 	To      string

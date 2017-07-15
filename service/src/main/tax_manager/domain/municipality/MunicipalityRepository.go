@@ -46,7 +46,7 @@ func (this MunicipalityRepository) DeleteAll() {
 	this.database.Query("DELETE FROM `MUNICIPALITIES`")
 }
 
-func (this MunicipalityRepository) DeleteById(municipality Municipality) {
+func (this MunicipalityRepository) Delete(municipality Municipality) {
 	this.database.Query("DELETE FROM `MUNICIPALITIES` WHERE `ID`=?", municipality.Id)
 }
 
