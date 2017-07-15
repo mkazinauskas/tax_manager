@@ -5,6 +5,7 @@ import (
 	"main/tax_manager/datasource"
 	"database/sql"
 	"time"
+	"main/tax_manager"
 )
 
 type TaxRepository struct {
@@ -14,19 +15,20 @@ type TaxRepository struct {
 func (this TaxRepository) Save(tax Tax) {
 	this.database.Execute("INSERT `TAXES` SET `MUNICIPALITY_ID`=?,`FROM`=?,`TO`=?,`TAX_TYPE`=?,`VALUE`=?",
 		tax.MunicipalityId,
-		tax.From.Format("yyyy-MM-dd"),
-		tax.To.Format("yyyy-MM-dd"),
-		tax.TaxType,
+		tax.From.Format(tax_manager.DEFAULT_DATE_FORMAT),
+		tax.To.Format(tax_manager.DEFAULT_DATE_FORMAT),
+		string(tax.TaxType),
 		tax.Value)
 }
 
-func (this *TaxRepository) FindTaxByMunicipalityId(id int64) (*Tax) {
-	result := this.database.Query("SELECT * FROM `TAXES` WHERE MUNICIPALITY_ID=?", id)
+func (this *TaxRepository) FindTaxByMunicipalityId(id int64, taxType TaxType) (*[]Tax) {
+	result := this.database.Query("SELECT * FROM `TAXES` WHERE `MUNICIPALITY_ID`=? AND `TAX_TYPE=?`", id, string(taxType))
 	return mapTo(result)
 }
 
-func mapTo(result *sql.Rows) (*Tax) {
-	if result.Next() {
+func mapTo(result *sql.Rows) (*[]Tax) {
+	foundTaxes := []Tax{}
+	for result.Next() {
 		var id int64
 		var municipalityId int64
 		var from string
@@ -35,16 +37,16 @@ func mapTo(result *sql.Rows) (*Tax) {
 		var value float64
 		result.Scan(&id, &municipalityId, &from, &to, &taxType, &value)
 
-		parsedFrom, _ := time.Parse("yyyy-MM-dd", from)
-		parsedTo, _ := time.Parse("yyyy-MM-dd", to)
-		return &Tax{
+		parsedFrom, _ := time.Parse(tax_manager.DEFAULT_DATE_FORMAT, from)
+		parsedTo, _ := time.Parse(tax_manager.DEFAULT_DATE_FORMAT, to)
+		foundTaxes = append(foundTaxes, Tax{
 			Id:             id,
 			MunicipalityId: municipalityId,
 			From:           parsedFrom,
 			To:             parsedTo,
 			TaxType:        FindTaxTypeByValue(taxType),
-			Value:          value}
-	} else {
-		return nil
+			Value:          value})
 	}
+	return &foundTaxes
+
 }

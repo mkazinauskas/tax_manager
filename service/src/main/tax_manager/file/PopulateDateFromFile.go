@@ -12,6 +12,7 @@ import (
 	"main/tax_manager"
 	"strconv"
 	"main/tax_manager/utils"
+	"main/tax_manager/domain/commands"
 )
 
 const DEFAULT_COLUMN_LENGTH = 5
@@ -49,17 +50,13 @@ func (this PopulateDataFromFile) Populate(filePath string) {
 		fmt.Println(row)
 
 		parsedMunicipality := municipality.Municipality{Name: row[header.municipality]}
-		savedMunicipality := municipality.MunicipalityRepository{}.Save(parsedMunicipality)
-		fmt.Println(savedMunicipality)
+		fmt.Println(parsedMunicipality)
 
 		parsedTax := this.parseTax(row, header)
-		parsedTax.MunicipalityId = savedMunicipality.Id
-		tax.TaxRepository{}.Save(parsedTax)
-
 		fmt.Println(parsedTax)
 
+		commands.SaveMunicipalityAndTax{MunicipalityToSave: parsedMunicipality, TaxToSave: parsedTax}.Save()
 	}
-
 }
 
 func (PopulateDataFromFile) parseTax(row []string, header CSVHeaderStructure) (tax.Tax) {

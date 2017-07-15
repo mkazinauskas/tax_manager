@@ -10,8 +10,8 @@ var municipalityRepository = municipality.MunicipalityRepository{}
 var taxRepository = tax.TaxRepository{}
 
 func Calculate(municipality string, date time.Time) (rate float32) {
-	foundMunicipality := municipalityRepository.FindByName(municipality)
-	foundTaxes := taxRepository.FindTaxByMunicipalityId(foundMunicipality.Id)
+	//foundMunicipality := municipalityRepository.FindByName(municipality)
+//	foundTaxes := taxRepository.FindTaxByMunicipalityId(foundMunicipality.Id)
 
 	return
 }
