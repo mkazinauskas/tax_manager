@@ -35,6 +35,42 @@ func TestCalculateYearlyTax(testContext *testing.T) {
 		From:    utils.Parse("2016.01.01"),
 		To:      utils.Parse("2016.12.31"),
 		TaxType: tax.YEARLY,
+		Value:   0.2,
+	})
+
+	taxRate := NewCalculateTax(municipalityRepository, taxRepository).Calculate("Vilnius", taxCalculationTime)
+	if taxRate != 0.2 {
+		testContext.Errorf("Vilnius tax for `%s` was `%f`, but expected 0.1", taxCalculationTime, taxRate)
+	}
+}
+
+func TestCalculateMonthlyTax(testContext *testing.T) {
+	taxCalculationTime := utils.Parse("2016.05.02")
+
+	municipalityRepository := municipality.NewStubMunicipalityRepository(municipality.NewMunicipality(1, "Vilnius"))
+
+	taxRepository := tax.NewStubTaxRepository(tax.Tax{
+		From:    utils.Parse("2016.05.01"),
+		To:      utils.Parse("2016.05.31"),
+		TaxType: tax.MONTHLY,
+		Value:   0.4,
+	})
+
+	taxRate := NewCalculateTax(municipalityRepository, taxRepository).Calculate("Vilnius", taxCalculationTime)
+	if taxRate != 0.4 {
+		testContext.Errorf("Vilnius tax for `%s` was `%f`, but expected 0.4", taxCalculationTime, taxRate)
+	}
+}
+
+func TestCalculateDailyTax(testContext *testing.T) {
+	taxCalculationTime := utils.Parse("2016.01.01")
+
+	municipalityRepository := municipality.NewStubMunicipalityRepository(municipality.NewMunicipality(1, "Vilnius"))
+
+	taxRepository := tax.NewStubTaxRepository(tax.Tax{
+		From:    utils.Parse("2016.01.01"),
+		To:      utils.Parse("2016.12.15"),
+		TaxType: tax.DAILY,
 		Value:   0.1,
 	})
 
