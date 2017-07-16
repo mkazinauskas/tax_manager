@@ -11,7 +11,7 @@ import (
 )
 
 func GetAllMunicipalities(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	municipalities := municipality.MunicipalityRepository{}.FindAll()
+	municipalities := municipality.NewMySQLMunicipalityRepository().FindAll()
 	fmt.Fprint(w, Marshal(municipalities))
 }
 
@@ -24,12 +24,12 @@ func SaveNewMunicipality(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 	unmarshalError := json.NewDecoder(r.Body).Decode(&saveMunicipalityRequest)
 	utils.Check(unmarshalError)
 
-	existingMunicipality := municipality.MunicipalityRepository{}.FindByName(saveMunicipalityRequest.Name)
+	existingMunicipality := municipality.NewMySQLMunicipalityRepository().FindByName(saveMunicipalityRequest.Name)
 	if existingMunicipality != nil {
 		w.WriteHeader(http.StatusConflict)
 		return
 	}
-	municipality.MunicipalityRepository{}.Save(municipality.Municipality{Name: saveMunicipalityRequest.Name})
+	municipality.NewMySQLMunicipalityRepository().Save(municipality.Municipality{Name: saveMunicipalityRequest.Name})
 
 	w.WriteHeader(http.StatusCreated)
 }
@@ -38,7 +38,7 @@ func GetMunicipalityById(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	value, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
 	utils.Check(err)
 
-	foundMunicipality := municipality.MunicipalityRepository{}.FindById(value)
+	foundMunicipality := municipality.NewMySQLMunicipalityRepository().FindById(value)
 	if foundMunicipality == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -50,11 +50,11 @@ func DeleteMunicipalityById(w http.ResponseWriter, r *http.Request, ps httproute
 	value, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
 	utils.Check(err)
 
-	foundMunicipality := municipality.MunicipalityRepository{}.FindById(value)
+	foundMunicipality := municipality.NewMySQLMunicipalityRepository().FindById(value)
 	if foundMunicipality == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	municipality.MunicipalityRepository{}.Delete(*foundMunicipality)
+	municipality.NewMySQLMunicipalityRepository().Delete(*foundMunicipality)
 	w.WriteHeader(http.StatusNoContent)
 }

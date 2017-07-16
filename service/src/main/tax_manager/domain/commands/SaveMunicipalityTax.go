@@ -5,20 +5,34 @@ import (
 	"main/tax_manager/domain/tax"
 )
 
-type SaveMunicipalityAndTax struct {
-	MunicipalityToSave municipality.Municipality
-	TaxToSave          tax.Tax
+type saveMunicipalityAndTax struct {
+	municipalityToSave     municipality.Municipality
+	taxToSave              tax.Tax
+	municipalityRepository municipality.MunicipalityRepository
+	taxRepository          tax.TaxRepository
 }
 
-func (this SaveMunicipalityAndTax) Save() {
-	savedMunicipality := municipality.MunicipalityRepository{}.FindByName(this.MunicipalityToSave.Name)
+func NewSaveMunicipalityAndTax(municipalityToSave municipality.Municipality,
+	taxToSave tax.Tax,
+	municipalityRepository municipality.MunicipalityRepository,
+	taxRepository tax.TaxRepository) (saveMunicipalityAndTax) {
+	return saveMunicipalityAndTax{
+		municipalityToSave:     municipalityToSave,
+		taxToSave:              taxToSave,
+		municipalityRepository: municipalityRepository,
+		taxRepository:          taxRepository,
+	}
+}
+
+func (this saveMunicipalityAndTax) Save() {
+	savedMunicipality := this.municipalityRepository.FindByName(this.municipalityToSave.Name)
 	if savedMunicipality == nil {
-		savedMunicipality = municipality.MunicipalityRepository{}.Save(this.MunicipalityToSave)
+		savedMunicipality = this.municipalityRepository.Save(this.municipalityToSave)
 	}
 
-	this.TaxToSave.MunicipalityId = savedMunicipality.Id
-	existingTaxes := taxRepository.FindTaxByMunicipalityIdAndTaxType(savedMunicipality.Id, this.TaxToSave.TaxType)
+	this.taxToSave.MunicipalityId = savedMunicipality.Id
+	existingTaxes := this.taxRepository.FindTaxByMunicipalityIdAndTaxType(savedMunicipality.Id, this.taxToSave.TaxType)
 	if existingTaxes == nil {
-		taxRepository.Save(this.TaxToSave)
+		this.taxRepository.Save(this.taxToSave)
 	}
 }

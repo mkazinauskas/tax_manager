@@ -13,11 +13,17 @@ import (
 	"strconv"
 	"main/tax_manager/utils"
 	"main/tax_manager/domain/commands"
+	"main/tax_manager/factory"
 )
 
 const DEFAULT_COLUMN_LENGTH = 5
 
-type PopulateDataFromFile struct {
+type populateDataFromFile struct {
+	applicationFactory factory.ApplicationFactory
+}
+
+func NewPopulateDataFromFile(applicationFactory factory.ApplicationFactory) (populateDataFromFile) {
+	return populateDataFromFile{applicationFactory: applicationFactory}
 }
 
 type CSVHeaderStructure struct {
@@ -28,7 +34,7 @@ type CSVHeaderStructure struct {
 	value int
 }
 
-func (this PopulateDataFromFile) Populate(filePath string) {
+func (this populateDataFromFile) Populate(filePath string) {
 	contentAsBytes, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		panic(err)
@@ -49,17 +55,21 @@ func (this PopulateDataFromFile) Populate(filePath string) {
 	for _, row := range rows[1:] {
 		fmt.Println(row)
 
-		parsedMunicipality := municipality.Municipality{Name: row[header.municipality]}
+		parsedMunicipality := municipality.NewMunicipality(0, row[header.municipality])
 		fmt.Println(parsedMunicipality)
 
 		parsedTax := this.parseTax(row, header)
 		fmt.Println(parsedTax)
 
-		commands.SaveMunicipalityAndTax{MunicipalityToSave: parsedMunicipality, TaxToSave: parsedTax}.Save()
+		commands.NewSaveMunicipalityAndTax(
+			parsedMunicipality,
+			parsedTax,
+			this.applicationFactory.MunicipalityRepository(),
+			this.applicationFactory.TaxRepository()).Save()
 	}
 }
 
-func (PopulateDataFromFile) parseTax(row []string, header CSVHeaderStructure) (tax.Tax) {
+func (populateDataFromFile) parseTax(row []string, header CSVHeaderStructure) (tax.Tax) {
 	from, fromDateParsing := time.Parse(tax_manager.DEFAULT_DATE_FORMAT, row[header.date_from])
 	utils.CheckError(fromDateParsing, "Failed to parse date from `%s`", string(row[header.date_from]))
 
@@ -76,7 +86,7 @@ func (PopulateDataFromFile) parseTax(row []string, header CSVHeaderStructure) (t
 		Value:   value}
 }
 
-func (this PopulateDataFromFile) validateRowsLength(rows [][]string) {
+func (this populateDataFromFile) validateRowsLength(rows [][]string) {
 	for index, row := range rows {
 		if len(row) != DEFAULT_COLUMN_LENGTH {
 			utils.Error("Row `%s` column count is not %s", index, DEFAULT_COLUMN_LENGTH)

@@ -7,17 +7,17 @@ import (
 	"main/tax_manager/domain/tax"
 	"strconv"
 	"main/tax_manager/utils"
-	"main/tax_manager/domain/municipality"
 	"encoding/json"
 	"time"
 	"main/tax_manager"
+	"main/tax_manager/factory"
 )
 
 func GetAllTaxes(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	value, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
 	utils.Check(err)
 
-	taxes := tax.TaxRepository{}.FindTaxByMunicipalityId(value)
+	taxes := factory.DefaultApplicationFactory{}.TaxRepository().FindTaxByMunicipalityId(value)
 	fmt.Fprint(w, Marshal(taxes))
 }
 
@@ -28,13 +28,13 @@ func GetTaxById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	taxId, err := strconv.ParseInt(ps.ByName("tax-id"), 10, 64)
 	utils.Check(err)
 
-	foundMunicipality := municipality.MunicipalityRepository{}.FindById(municipalityId)
+	foundMunicipality := factory.DefaultApplicationFactory{}.MunicipalityRepository().FindById(municipalityId)
 	if foundMunicipality == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	foundTax := tax.TaxRepository{}.FindTaxByMunicipalityIdAndTaxId(municipalityId, taxId)
+	foundTax := factory.DefaultApplicationFactory{}.TaxRepository().FindTaxByMunicipalityIdAndTaxId(municipalityId, taxId)
 	if foundTax == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -49,18 +49,18 @@ func DeleteTaxById(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	taxId, err := strconv.ParseInt(ps.ByName("tax-id"), 10, 64)
 	utils.Check(err)
 
-	foundMunicipality := municipality.MunicipalityRepository{}.FindById(municipalityId)
+	foundMunicipality := factory.DefaultApplicationFactory{}.MunicipalityRepository().FindById(municipalityId)
 	if foundMunicipality == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	foundTax := tax.TaxRepository{}.FindTaxByMunicipalityIdAndTaxId(municipalityId, taxId)
+	foundTax := factory.DefaultApplicationFactory{}.TaxRepository().FindTaxByMunicipalityIdAndTaxId(municipalityId, taxId)
 	if foundTax == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	tax.TaxRepository{}.Delete(*foundTax)
+	factory.DefaultApplicationFactory{}.TaxRepository().Delete(*foundTax)
 
 	w.WriteHeader(http.StatusNoContent)
 }
@@ -76,7 +76,7 @@ func SaveNewMunicipalityTax(w http.ResponseWriter, r *http.Request, ps httproute
 	municipalityId, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
 	utils.Check(err)
 
-	foundMunicipality := municipality.MunicipalityRepository{}.FindById(municipalityId)
+	foundMunicipality := factory.DefaultApplicationFactory{}.MunicipalityRepository().FindById(municipalityId)
 	if foundMunicipality == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -86,7 +86,7 @@ func SaveNewMunicipalityTax(w http.ResponseWriter, r *http.Request, ps httproute
 	unmarshalError := json.NewDecoder(r.Body).Decode(&saveTaxRequest)
 	utils.Check(unmarshalError)
 
-	existingTax := tax.TaxRepository{}.FindTaxByMunicipalityIdAndTaxType(municipalityId, tax.FindTaxTypeByValue(saveTaxRequest.TaxType))
+	existingTax := factory.DefaultApplicationFactory{}.TaxRepository().FindTaxByMunicipalityIdAndTaxType(municipalityId, tax.FindTaxTypeByValue(saveTaxRequest.TaxType))
 	if existingTax != nil {
 		w.WriteHeader(http.StatusConflict)
 		return
@@ -103,7 +103,7 @@ func SaveNewMunicipalityTax(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	fmt.Println(saveTaxRequest)
-	tax.TaxRepository{}.Save(
+	factory.DefaultApplicationFactory{}.TaxRepository().Save(
 		tax.Tax{
 			MunicipalityId: municipalityId,
 			From:           fromTime,

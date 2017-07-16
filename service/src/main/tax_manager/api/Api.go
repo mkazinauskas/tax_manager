@@ -4,9 +4,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"log"
+	"main/tax_manager/factory"
 )
 
-func Initialize() {
+func Initialize(factory factory.ApplicationFactory) {
 	router := httprouter.New()
 	router.GET("/", GetIndex)
 	router.GET("/municipalities", GetAllMunicipalities)

@@ -1,9 +1,10 @@
 package main
 
 import (
-	"main/tax_manager/api"
 	"main/tax_manager/datasource"
 	"main/tax_manager/file"
+	"main/tax_manager/factory"
+	"main/tax_manager/api"
 )
 
 func init() {
@@ -11,6 +12,6 @@ func init() {
 }
 
 func main() {
-	file.PopulateDataFromFile{}.Populate("tax_file.csv")
-	api.Initialize()
+	file.NewPopulateDataFromFile(factory.DefaultApplicationFactory{}).Populate("tax_file.csv")
+	api.Initialize(factory.DefaultApplicationFactory{})
 }

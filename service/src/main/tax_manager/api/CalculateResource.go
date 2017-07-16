@@ -8,6 +8,8 @@ import (
 	"main/tax_manager"
 	"main/tax_manager/domain/commands"
 	"log"
+	"main/tax_manager/domain/municipality"
+	"main/tax_manager/domain/tax"
 )
 
 func CalculateTax(w http.ResponseWriter, r *http.Request, rp httprouter.Params) {
@@ -19,6 +21,13 @@ func CalculateTax(w http.ResponseWriter, r *http.Request, rp httprouter.Params) 
 		log.Println("No `municipalityName` as request param was not found")
 		return
 	}
+
+	if municipality.NewMySQLMunicipalityRepository().FindByName(municipalityName) == nil {
+		fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: fmt.Sprintf("No `municipality` found with name `%s`", municipalityName)}))
+		log.Println("No `municipalityName` as request param was not found")
+		return
+	}
+
 	date := queryValues.Get("date")
 	log.Println(date)
 	if &date == nil {
@@ -32,7 +41,9 @@ func CalculateTax(w http.ResponseWriter, r *http.Request, rp httprouter.Params) 
 			return
 		}
 
-		result := commands.CalculateTax{}.Calculate(municipalityName, date)
+		result := commands.NewCalculateTax(
+			municipality.NewMySQLMunicipalityRepository(),
+			tax.NewMySQLTaxRepository()).Calculate(municipalityName, date)
 		fmt.Fprint(w, Marshal(CalculationResult{Tax: result}))
 		log.Println(CalculationResult{Tax: result})
 	}
