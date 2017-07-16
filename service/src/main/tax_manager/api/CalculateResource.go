@@ -8,21 +8,25 @@ import (
 	"main/tax_manager"
 	"main/tax_manager/domain/commands"
 	"log"
-	"main/tax_manager/domain/municipality"
-	"main/tax_manager/domain/tax"
+	"main/tax_manager/factory"
 )
 
-func CalculateTax(w http.ResponseWriter, r *http.Request, rp httprouter.Params) {
+func CalculateTax(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	queryValues := r.URL.Query()
 	municipalityName := queryValues.Get("municipalityName")
 	log.Println(municipalityName)
+
+	municipalityRepository := factory.DefaultApplicationFactory{}.MunicipalityRepository()
+
+	taxRepository := factory.DefaultApplicationFactory{}.TaxRepository()
+
 	if &municipalityName == nil {
 		fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: "No `municipalityName` as request param was not found"}))
 		log.Println("No `municipalityName` as request param was not found")
 		return
 	}
 
-	if municipality.NewMySQLMunicipalityRepository().FindByName(municipalityName) == nil {
+	if municipalityRepository.FindByName(municipalityName) == nil {
 		fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: fmt.Sprintf("No `municipality` found with name `%s`", municipalityName)}))
 		log.Println("No `municipalityName` as request param was not found")
 		return
@@ -42,8 +46,8 @@ func CalculateTax(w http.ResponseWriter, r *http.Request, rp httprouter.Params) 
 		}
 
 		result := commands.NewCalculateTax(
-			municipality.NewMySQLMunicipalityRepository(),
-			tax.NewMySQLTaxRepository()).Calculate(municipalityName, date)
+			municipalityRepository,
+			taxRepository).Calculate(municipalityName, date)
 		fmt.Fprint(w, Marshal(CalculationResult{Tax: result}))
 		log.Println(CalculationResult{Tax: result})
 	}
