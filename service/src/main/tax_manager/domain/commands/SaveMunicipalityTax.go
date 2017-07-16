@@ -24,7 +24,7 @@ func NewSaveMunicipalityAndTax(municipalityToSave municipality.Municipality,
 	}
 }
 
-func (this saveMunicipalityAndTax) Save() {
+func (this saveMunicipalityAndTax) Handle() {
 	savedMunicipality := this.municipalityRepository.FindByName(this.municipalityToSave.Name)
 	if savedMunicipality == nil {
 		savedMunicipality = this.municipalityRepository.Save(this.municipalityToSave)
