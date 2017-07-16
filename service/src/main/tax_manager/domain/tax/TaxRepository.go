@@ -21,9 +21,9 @@ func (this TaxRepository) Save(tax Tax) {
 		tax.Value)
 }
 
-func (this TaxRepository) FindTaxByMunicipalityIdAndTaxType(id int64, taxType TaxType) (*Tax) {
+func (this TaxRepository) FindTaxByMunicipalityIdAndTaxType(id int64, taxType TaxType) ([]Tax) {
 	result := this.database.Query("SELECT * FROM `TAXES` WHERE `MUNICIPALITY_ID`=? AND `TAX_TYPE`=?", id, string(taxType))
-	return this.takeFirst(mapTo(result))
+	return mapTo(result)
 }
 
 func (this TaxRepository) FindTaxByMunicipalityIdAndTaxId(municipalityId int64, taxId int64) (*Tax) {

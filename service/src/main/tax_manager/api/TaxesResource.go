@@ -94,12 +94,12 @@ func SaveNewMunicipalityTax(w http.ResponseWriter, r *http.Request, ps httproute
 
 	fromTime, fromTimeParseError := time.Parse(tax_manager.DEFAULT_DATE_FORMAT, saveTaxRequest.From)
 	if fromTimeParseError != nil {
-		fmt.Fprint(w, Marshal(ErrorResponse{Message: fmt.Sprintf("Property `from` has to be in format `%s`", tax_manager.DEFAULT_DATE_FORMAT)}))
+		fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: fmt.Sprintf("Property `from` has to be in format `%s`", tax_manager.DEFAULT_DATE_FORMAT)}))
 	}
 
 	toTime, toTimeParseError := time.Parse(tax_manager.DEFAULT_DATE_FORMAT, saveTaxRequest.To)
 	if toTimeParseError != nil {
-		fmt.Fprint(w, Marshal(ErrorResponse{Message: fmt.Sprintf("Property `to` has to be in format `%s`", tax_manager.DEFAULT_DATE_FORMAT)}))
+		fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: fmt.Sprintf("Property `to` has to be in format `%s`", tax_manager.DEFAULT_DATE_FORMAT)}))
 	}
 
 	fmt.Println(saveTaxRequest)
