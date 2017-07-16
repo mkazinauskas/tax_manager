@@ -32,7 +32,7 @@ func (this saveMunicipalityAndTax) Save() {
 
 	this.taxToSave.MunicipalityId = savedMunicipality.Id
 	existingTaxes := this.taxRepository.FindTaxByMunicipalityIdAndTaxType(savedMunicipality.Id, this.taxToSave.TaxType)
-	if existingTaxes == nil {
+	if len(existingTaxes) == 0 {
 		this.taxRepository.Save(this.taxToSave)
 	}
 }
