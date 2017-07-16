@@ -5,7 +5,6 @@ import (
 	"strings"
 	"fmt"
 	"io/ioutil"
-	"errors"
 	"main/tax_manager/domain/municipality"
 	"main/tax_manager/domain/tax"
 	"time"
@@ -26,14 +25,6 @@ func NewPopulateDataFromFile(applicationFactory factory.ApplicationFactory) (pop
 	return populateDataFromFile{applicationFactory: applicationFactory}
 }
 
-type CSVHeaderStructure struct {
-	municipality,
-	date_from,
-	date_to,
-	tax_type,
-	value int
-}
-
 func (this populateDataFromFile) Populate(filePath string) {
 	contentAsBytes, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -49,7 +40,7 @@ func (this populateDataFromFile) Populate(filePath string) {
 
 	this.validateRowsLength(rows)
 	fmt.Println(rows)
-	header := CSVHeaderStructure{}.populate(rows[0])
+	header := csvHeaderStructure{}.NewCSVHeaderStructure(rows[0])
 
 	fmt.Println(header)
 	for _, row := range rows[1:] {
@@ -69,7 +60,7 @@ func (this populateDataFromFile) Populate(filePath string) {
 	}
 }
 
-func (populateDataFromFile) parseTax(row []string, header CSVHeaderStructure) (tax.Tax) {
+func (populateDataFromFile) parseTax(row []string, header csvHeaderStructure) (tax.Tax) {
 	from, fromDateParsing := time.Parse(tax_manager.DEFAULT_DATE_FORMAT, row[header.date_from])
 	utils.CheckError(fromDateParsing, "Failed to parse date from `%s`", string(row[header.date_from]))
 
@@ -92,25 +83,4 @@ func (this populateDataFromFile) validateRowsLength(rows [][]string) {
 			utils.Error("Row `%s` column count is not %s", index, DEFAULT_COLUMN_LENGTH)
 		}
 	}
-}
-
-func (this CSVHeaderStructure) populate(header []string) (CSVHeaderStructure) {
-	for index, column := range header {
-		switch column {
-		case "municipality":
-			this.municipality = index
-		case "date_from":
-			this.date_from = index
-		case "date_to":
-			this.date_to = index
-		case "tax_type":
-			this.tax_type = index
-		case "value":
-			this.value = index
-		default:
-			panic(errors.New(fmt.Sprintf("Header column %s", header[index])))
-		}
-	}
-	fmt.Println(this)
-	return this
 }
