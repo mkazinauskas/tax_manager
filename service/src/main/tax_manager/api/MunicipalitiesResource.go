@@ -11,9 +11,11 @@ import (
 	"main/tax_manager/factory"
 )
 
-func GetAllMunicipalities(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	municipalities := factory.DefaultApplicationFactory{}.MunicipalityRepository().FindAll()
-	fmt.Fprint(w, Marshal(municipalities))
+func GetAllMunicipalities(factory factory.ApplicationFactory) (httprouter.Handle) {
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		municipalities := factory.MunicipalityRepository().FindAll()
+		fmt.Fprint(w, Marshal(municipalities))
+	}
 }
 
 type SaveNewMunicipalityRequest struct {

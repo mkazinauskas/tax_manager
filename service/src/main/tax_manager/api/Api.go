@@ -10,7 +10,7 @@ import (
 func Initialize(factory factory.ApplicationFactory) {
 	router := httprouter.New()
 	router.GET("/", GetIndex)
-	router.GET("/municipalities", GetAllMunicipalities)
+	router.GET("/municipalities", GetAllMunicipalities(factory))
 	router.POST("/municipalities", SaveNewMunicipality)
 	router.GET("/municipalities/:id", GetMunicipalityById)
 	router.DELETE("/municipalities/:id", DeleteMunicipalityById)
