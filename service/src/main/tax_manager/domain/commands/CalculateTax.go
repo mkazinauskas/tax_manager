@@ -6,6 +6,7 @@ import (
 	"main/tax_manager/domain/tax"
 	"github.com/aodin/date"
 	"main/tax_manager/utils"
+	"log"
 )
 
 type calculateTax struct {
@@ -35,10 +36,12 @@ func (this calculateTax) Calculate(municipalityName string, date time.Time) (flo
 
 func (calculateTax) getTax(taxes []tax.Tax, taxDate time.Time) (float64) {
 	taxDateRange := date.NewRange(date.FromTime(taxDate), date.FromTime(taxDate))
-	for _, tax := range taxes {
-		dateRange := date.NewRange(date.FromTime(tax.From), date.FromTime(tax.To))
+	for _, taxForEvaluation := range taxes {
+		log.Println("from", taxForEvaluation.From)
+		log.Println("to", taxForEvaluation.To)
+		dateRange := date.NewRange(date.FromTime(taxForEvaluation.From), date.FromTime(taxForEvaluation.To))
 		if dateRange.Contains(taxDateRange) {
-			return tax.Value
+			return taxForEvaluation.Value
 		}
 	}
 	return 0

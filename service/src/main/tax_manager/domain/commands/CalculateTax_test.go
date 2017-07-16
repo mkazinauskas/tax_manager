@@ -7,7 +7,6 @@ import (
 	"main/tax_manager/utils"
 )
 
-
 func TestCalculateNoTax(testContext *testing.T) {
 	taxCalculationTime := utils.Parse("2015.01.01")
 
@@ -69,7 +68,7 @@ func TestCalculateDailyTax(testContext *testing.T) {
 
 	taxRepository := tax.NewStubTaxRepository(tax.Tax{
 		From:    utils.Parse("2016.01.01"),
-		To:      utils.Parse("2016.12.15"),
+		To:      utils.Parse("2016.01.01"),
 		TaxType: tax.DAILY,
 		Value:   0.1,
 	})
