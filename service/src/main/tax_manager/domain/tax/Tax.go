@@ -15,6 +15,10 @@ type Tax struct {
 	Value          float64
 }
 
+func NewTax(id int64, municipalityId int64, from time.Time, to time.Time, taxType TaxType, value float64) (Tax) {
+	return Tax{Id: id, MunicipalityId: municipalityId, From: from, To: to, TaxType: taxType, Value: value}
+}
+
 type TaxType string
 
 const (
