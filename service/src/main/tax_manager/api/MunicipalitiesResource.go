@@ -22,42 +22,48 @@ type SaveNewMunicipalityRequest struct {
 	Name string
 }
 
-func SaveNewMunicipality(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	saveMunicipalityRequest := SaveNewMunicipalityRequest{}
-	unmarshalError := json.NewDecoder(r.Body).Decode(&saveMunicipalityRequest)
-	utils.Check(unmarshalError)
+func SaveNewMunicipality(factory factory.ApplicationFactory) (httprouter.Handle) {
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		saveMunicipalityRequest := SaveNewMunicipalityRequest{}
+		unmarshalError := json.NewDecoder(r.Body).Decode(&saveMunicipalityRequest)
+		utils.Check(unmarshalError)
 
-	existingMunicipality := factory.DefaultApplicationFactory{}.MunicipalityRepository().FindByName(saveMunicipalityRequest.Name)
-	if existingMunicipality != nil {
-		w.WriteHeader(http.StatusConflict)
-		return
+		existingMunicipality := factory.MunicipalityRepository().FindByName(saveMunicipalityRequest.Name)
+		if existingMunicipality != nil {
+			w.WriteHeader(http.StatusConflict)
+			return
+		}
+		factory.MunicipalityRepository().Save(municipality.Municipality{Name: saveMunicipalityRequest.Name})
+
+		w.WriteHeader(http.StatusCreated)
 	}
-	factory.DefaultApplicationFactory{}.MunicipalityRepository().Save(municipality.Municipality{Name: saveMunicipalityRequest.Name})
-
-	w.WriteHeader(http.StatusCreated)
 }
 
-func GetMunicipalityById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	value, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
-	utils.Check(err)
+func GetMunicipalityById(factory factory.ApplicationFactory) (httprouter.Handle) {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		value, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
+		utils.Check(err)
 
-	foundMunicipality := factory.DefaultApplicationFactory{}.MunicipalityRepository().FindById(value)
-	if foundMunicipality == nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
+		foundMunicipality := factory.MunicipalityRepository().FindById(value)
+		if foundMunicipality == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		fmt.Fprint(w, Marshal(foundMunicipality))
 	}
-	fmt.Fprint(w, Marshal(foundMunicipality))
 }
 
-func DeleteMunicipalityById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	value, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
-	utils.Check(err)
+func DeleteMunicipalityById(factory factory.ApplicationFactory) (httprouter.Handle) {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		value, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
+		utils.Check(err)
 
-	foundMunicipality := factory.DefaultApplicationFactory{}.MunicipalityRepository().FindById(value)
-	if foundMunicipality == nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
+		foundMunicipality := factory.MunicipalityRepository().FindById(value)
+		if foundMunicipality == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		factory.MunicipalityRepository().Delete(*foundMunicipality)
+		w.WriteHeader(http.StatusNoContent)
 	}
-	factory.DefaultApplicationFactory{}.MunicipalityRepository().Delete(*foundMunicipality)
-	w.WriteHeader(http.StatusNoContent)
 }
