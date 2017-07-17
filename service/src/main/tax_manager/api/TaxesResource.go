@@ -109,7 +109,6 @@ func SaveNewMunicipalityTax(factory factory.ApplicationFactory) (httprouter.Hand
 			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: fmt.Sprintf("Property `to` has to be in format `%s`", tax_manager.DEFAULT_DATE_FORMAT)}))
 		}
 
-		fmt.Println(saveTaxRequest)
 		factory.TaxRepository().Save(
 			tax.Tax{
 				MunicipalityId: municipalityId,

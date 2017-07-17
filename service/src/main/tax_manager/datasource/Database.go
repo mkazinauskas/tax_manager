@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"main/tax_manager/utils"
-	"fmt"
+	"log"
 )
 
 const (
@@ -25,7 +25,7 @@ func (this Database) CheckConnection() {
 }
 
 func (this Database) Execute(query string, args ... interface{}) (sql.Result) {
-	fmt.Println(query, args)
+	log.Println(query, args)
 	db := this.acquireConnection()
 	stmt, prepareError := db.Prepare(query)
 	utils.Check(prepareError)
@@ -37,7 +37,7 @@ func (this Database) Execute(query string, args ... interface{}) (sql.Result) {
 }
 
 func (this Database) Query(query string, args ... interface{}) (*sql.Rows) {
-	fmt.Println(query, args)
+	log.Println(query, args)
 	db := this.acquireConnection()
 	stmt, prepareError := db.Prepare(query)
 	utils.Check(prepareError)

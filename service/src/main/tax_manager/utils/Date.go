@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-func Parse(date string) (time.Time) {
-	parsedTime, _ := time.Parse(tax_manager.DEFAULT_DATE_FORMAT, date)
+func ParseDate(date string) (time.Time) {
+	parsedTime, parsingError := time.Parse(tax_manager.DEFAULT_DATE_FORMAT, date)
+	CheckError(parsingError, "Failed to parse date from `%s` as `%s`", date, tax_manager.DEFAULT_DATE_FORMAT)
 	return parsedTime
 }

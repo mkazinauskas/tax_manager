@@ -5,9 +5,11 @@ import (
 	"net/http"
 	"log"
 	"main/tax_manager/factory"
+	"main/tax_manager"
 )
 
 func Initialize(factory factory.ApplicationFactory) {
+	log.Println("Loading api mappings")
 	router := httprouter.New()
 	router.GET("/", GetIndex)
 	router.GET("/municipalities", GetAllMunicipalities(factory))
@@ -20,5 +22,6 @@ func Initialize(factory factory.ApplicationFactory) {
 	router.DELETE("/municipalities/:id/taxes/:tax-id", DeleteTaxById(factory))
 	router.GET("/calculate-tax", CalculateTax(factory))
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Println("SERVER IS STARTED ON PORT", tax_manager.API_PORT)
+	log.Fatal(http.ListenAndServe(tax_manager.API_PORT, router))
 }

@@ -1,7 +1,8 @@
 package file
 
 import (
-	"errors"
+	"log"
+	"main/tax_manager/utils"
 	"fmt"
 )
 
@@ -27,9 +28,9 @@ func (this csvHeaderStructure) NewCSVHeaderStructure(header []string) (csvHeader
 		case "value":
 			this.value = index
 		default:
-			panic(errors.New(fmt.Sprintf("Header column %s", header[index])))
+			utils.Error("Header column `%s` is not parsable", header[index])
 		}
 	}
-	fmt.Println(this)
+	log.Println(fmt.Sprintf("Parsed CVS file header indexes `%s`: ", this))
 	return this
 }

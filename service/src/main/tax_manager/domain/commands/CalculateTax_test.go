@@ -8,13 +8,13 @@ import (
 )
 
 func TestCalculateNoTax(testContext *testing.T) {
-	taxCalculationTime := utils.Parse("2015.01.01")
+	taxCalculationTime := utils.ParseDate("2015.01.01")
 
 	municipalityRepository := municipality.NewStubMunicipalityRepository(municipality.NewMunicipality(1, "Vilnius"))
 
 	taxRepository := tax.NewStubTaxRepository(tax.Tax{
-		From:    utils.Parse("2016.01.01"),
-		To:      utils.Parse("2016.12.31"),
+		From:    utils.ParseDate("2016.01.01"),
+		To:      utils.ParseDate("2016.12.31"),
 		TaxType: tax.YEARLY,
 		Value:   0.1,
 	})
@@ -26,13 +26,13 @@ func TestCalculateNoTax(testContext *testing.T) {
 }
 
 func TestCalculateYearlyTax(testContext *testing.T) {
-	taxCalculationTime := utils.Parse("2016.01.01")
+	taxCalculationTime := utils.ParseDate("2016.01.01")
 
 	municipalityRepository := municipality.NewStubMunicipalityRepository(municipality.NewMunicipality(1, "Vilnius"))
 
 	taxRepository := tax.NewStubTaxRepository(tax.Tax{
-		From:    utils.Parse("2016.01.01"),
-		To:      utils.Parse("2016.12.31"),
+		From:    utils.ParseDate("2016.01.01"),
+		To:      utils.ParseDate("2016.12.31"),
 		TaxType: tax.YEARLY,
 		Value:   0.2,
 	})
@@ -44,13 +44,13 @@ func TestCalculateYearlyTax(testContext *testing.T) {
 }
 
 func TestCalculateMonthlyTax(testContext *testing.T) {
-	taxCalculationTime := utils.Parse("2016.05.02")
+	taxCalculationTime := utils.ParseDate("2016.05.02")
 
 	municipalityRepository := municipality.NewStubMunicipalityRepository(municipality.NewMunicipality(1, "Vilnius"))
 
 	taxRepository := tax.NewStubTaxRepository(tax.Tax{
-		From:    utils.Parse("2016.05.01"),
-		To:      utils.Parse("2016.05.31"),
+		From:    utils.ParseDate("2016.05.01"),
+		To:      utils.ParseDate("2016.05.31"),
 		TaxType: tax.MONTHLY,
 		Value:   0.4,
 	})
@@ -62,13 +62,13 @@ func TestCalculateMonthlyTax(testContext *testing.T) {
 }
 
 func TestCalculateDailyTax(testContext *testing.T) {
-	taxCalculationTime := utils.Parse("2016.01.01")
+	taxCalculationTime := utils.ParseDate("2016.01.01")
 
 	municipalityRepository := municipality.NewStubMunicipalityRepository(municipality.NewMunicipality(1, "Vilnius"))
 
 	taxRepository := tax.NewStubTaxRepository(tax.Tax{
-		From:    utils.Parse("2016.01.01"),
-		To:      utils.Parse("2016.01.01"),
+		From:    utils.ParseDate("2016.01.01"),
+		To:      utils.ParseDate("2016.01.01"),
 		TaxType: tax.DAILY,
 		Value:   0.1,
 	})

@@ -7,12 +7,11 @@ import (
 	"io/ioutil"
 	"main/tax_manager/domain/municipality"
 	"main/tax_manager/domain/tax"
-	"time"
-	"main/tax_manager"
 	"strconv"
 	"main/tax_manager/utils"
 	"main/tax_manager/domain/commands"
 	"main/tax_manager/factory"
+	"log"
 )
 
 const DEFAULT_COLUMN_LENGTH = 5
@@ -26,6 +25,7 @@ func NewPopulateDataFromFile(applicationFactory factory.ApplicationFactory) (pop
 }
 
 func (this populateDataFromFile) Populate(filePath string) {
+	log.Println(fmt.Sprintf("Reading file: `%s`", filePath))
 	contentAsBytes, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		panic(err)
@@ -36,21 +36,19 @@ func (this populateDataFromFile) Populate(filePath string) {
 	rows, err := r.ReadAll()
 	utils.Check(err)
 
-	fmt.Println(rows)
+	log.Println(fmt.Sprintf("Rows from CSV file: `%s`", rows))
 
 	this.validateRowsLength(rows)
-	fmt.Println(rows)
 	header := csvHeaderStructure{}.NewCSVHeaderStructure(rows[0])
 
-	fmt.Println(header)
 	for _, row := range rows[1:] {
-		fmt.Println(row)
+		log.Println(fmt.Sprintf("Parsing row `%s`", row))
 
 		parsedMunicipality := municipality.NewMunicipality(0, row[header.municipality])
-		fmt.Println(parsedMunicipality)
+		log.Println(fmt.Sprintf("Parsed municipality `%s`", parsedMunicipality))
 
 		parsedTax := this.parseTax(row, header)
-		fmt.Println(parsedTax)
+		log.Println(fmt.Sprintf("Parsed tax `%s`", parsedTax))
 
 		commands.NewSaveMunicipalityAndTax(
 			parsedMunicipality,
@@ -61,11 +59,8 @@ func (this populateDataFromFile) Populate(filePath string) {
 }
 
 func (populateDataFromFile) parseTax(row []string, header csvHeaderStructure) (tax.Tax) {
-	from, fromDateParsing := time.Parse(tax_manager.DEFAULT_DATE_FORMAT, row[header.date_from])
-	utils.CheckError(fromDateParsing, "Failed to parse date from `%s`", string(row[header.date_from]))
-
-	to, toDateParsing := time.Parse(tax_manager.DEFAULT_DATE_FORMAT, row[header.date_to])
-	utils.CheckError(toDateParsing, "Failed to parse date to `%s`", row[header.date_to])
+	from := utils.ParseDate(row[header.date_from])
+	to := utils.ParseDate(row[header.date_to])
 
 	value, floatValueError := strconv.ParseFloat(row[header.value], 64)
 	utils.CheckError(floatValueError, "Failed to parse float value from `%s`", row[header.value])
