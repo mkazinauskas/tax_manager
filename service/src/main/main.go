@@ -6,6 +6,7 @@ import (
 	"main/tax_manager/factory"
 	"main/tax_manager/api"
 	"log"
+	"main/tax_manager"
 )
 
 func init() {
@@ -15,7 +16,7 @@ func init() {
 
 func main() {
 	log.Println("Populating data from file")
-	file.NewPopulateDataFromFile(factory.DefaultApplicationFactory{}).Populate("tax_file.csv")
+	file.NewPopulateDataFromFile(factory.DefaultApplicationFactory{}).Populate(tax_manager.TAX_FILE_NAME)
 
 	api.Initialize(factory.DefaultApplicationFactory{})
 }

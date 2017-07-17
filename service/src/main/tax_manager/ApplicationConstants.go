@@ -6,4 +6,6 @@ const (
 
 	DRIVER_NAME      = "mysql"
 	DATA_SOURCE_NAME = "root:@/tax_manager?charset=utf8&parseTime=True&loc=Local"
+
+	TAX_FILE_NAME    = "tax_file.csv"
 )
