@@ -1,7 +1,6 @@
 # TAX MANAGER
-This application onsists of two services. `service` and `consumer`
-* `service` holds tax management
-* `consumer` shows how tax management works
+This application is for tax calculation of specified city and date. It also allows you to add new taxes and delete old ones.
+All commands are accesable via rest api.
 
 ## Installation
 
