@@ -1,4 +1,4 @@
+./test.sh
 export GOPATH=$(pwd)
-go test ...
+echo "Run application"
 go run src/main/main.go
-

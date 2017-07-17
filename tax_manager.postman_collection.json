@@ -1,0 +1,236 @@
+{
+	"variables": [],
+	"info": {
+		"name": "tax_manager",
+		"_postman_id": "fbbb4280-1c28-8e1f-f4d7-d9a53c7efdf6",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/",
+			"request": {
+				"url": "http://localhost:8080/",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"From\" :    \"2016.01.01\",\n\t\"To\":   \"2016.01.31\",\n\t\"TaxType\": \"daily\",\n\t\"Value\"  :0.3\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/municipalities",
+			"request": {
+				"url": "http://localhost:8080/municipalities",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"From\" :    \"2016.01.01\",\n\t\"To\":   \"2016.01.31\",\n\t\"TaxType\": \"daily\",\n\t\"Value\"  :0.3\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/municipalities/{:id}",
+			"request": {
+				"url": "http://localhost:8080/municipalities/{:id}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"From\" :    \"2016.01.01\",\n\t\"To\":   \"2016.01.31\",\n\t\"TaxType\": \"daily\",\n\t\"Value\"  :0.3\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/municipalities/{:id}",
+			"request": {
+				"url": "http://localhost:8080/municipalities/{:id}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"From\" :    \"2016.01.01\",\n\t\"To\":   \"2016.01.31\",\n\t\"TaxType\": \"daily\",\n\t\"Value\"  :0.3\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/municipalities",
+			"request": {
+				"url": "http://localhost:8080/municipalities",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" :    \"Klaipeda\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/municipalities/{:id}/taxes",
+			"request": {
+				"url": "http://localhost:8080/municipalities/{:id}/taxes",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"From\" :    \"2016.01.01\",\n\t\"To\":   \"2016.01.31\",\n\t\"TaxType\": \"daily\",\n\t\"Value\"  :0.3\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/municipalities/{:id}/taxes",
+			"request": {
+				"url": "http://localhost:8080/municipalities/{:id}/taxes",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"From\" :    \"2016.01.01\",\n\t\"To\":   \"2016.01.31\",\n\t\"TaxType\": \"daily\",\n\t\"Value\"  :0.3\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/municipalities/{:id}/taxes/{:tax-id}",
+			"request": {
+				"url": "http://localhost:8080/municipalities/{:id}/taxes/{:tax-id}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"From\" :    \"2016.01.01\",\n\t\"To\":   \"2016.01.31\",\n\t\"TaxType\": \"daily\",\n\t\"Value\"  :0.3\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/municipalities/{:id}/taxes/{:tax-id}",
+			"request": {
+				"url": "http://localhost:8080/municipalities/{:id}/taxes/{:tax-id}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"From\" :    \"2016.01.01\",\n\t\"To\":   \"2016.01.31\",\n\t\"TaxType\": \"daily\",\n\t\"Value\"  :0.3\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/calculate-tax?municipality-name=vilnius&date=2016.01.11",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/calculate-tax?municipality-name={:municipality-name}&date={:date}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"calculate-tax"
+					],
+					"query": [
+						{
+							"key": "municipality-name",
+							"value": "{:municipality-name}",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "date",
+							"value": "{:date}",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"From\" :    \"2016.02.01\",\n\t\"To\":   \"2016.03.31\",\n\t\"TaxType\": \"monthly\",\n\t\"Value\"  :0.3\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
