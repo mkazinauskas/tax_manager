@@ -63,6 +63,12 @@ func DeleteMunicipalityById(factory factory.ApplicationFactory) (httprouter.Hand
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
+
+		foundTaxes := factory.TaxRepository().FindTaxByMunicipalityId(foundMunicipality.Id)
+		if len(foundTaxes) > 0 {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			return
+		}
 		factory.MunicipalityRepository().Delete(*foundMunicipality)
 		w.WriteHeader(http.StatusNoContent)
 	}
