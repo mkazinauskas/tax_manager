@@ -1,4 +1,4 @@
-# tax_manager
+# TAX MANAGER
 This application onsists of two services. `service` and `consumer`
 * `service` holds tax management
 * `consumer` shows how tax management works
@@ -10,7 +10,7 @@ This application onsists of two services. `service` and `consumer`
 * Update settings in `service/src/main/tax_manager/ApplicationConstants.go` file
 * Update taxes in `service/tax_file.csv`
 * Run go to `service` folder and run`./run.sh` to start application server
-* Use postman collections for api calls
+* Use postman collection `tax_manager.postman_collection.json` for api calls
 
 ## Api usage
 Service server is started on 8080 port
@@ -33,14 +33,18 @@ Service server is started on 8080 port
 you believe is suitable) `(CSV) format`
 * Application should have ability to insert new records for municipality taxes (one record at a
 time) `(Implemented via api calls, or just add new value to csv document, which is loaded on application startup)`
+* User can ask for a specific municipality tax by entering municipality name and date `(Api call "GET /calculate-tax")`
+* Errors needs to be handled i.e. internal errors should not to be exposed to the end user
 
 ## What's pending
-* User can ask for a specific municipality tax by entering municipality name and date
-* Errors needs to be handled i.e. internal errors should not to be exposed to the end user
-You should ensure that application works correctly
+* You should ensure that application works correctly `(Due to lack of testing frameworks, integration tests are not done, also only one class is unit tested)`
 
 ## What could be improved
 * Database queries could be paginated
 * Api could have REST 3rd level with hypermedia
 * Dto structs could be use to expose to api, instead of domain structs
-* Smarter validation of request objects
+* Smarter/readable validation of request objects
+* Integration tests for api endpoints
+* Fatal errors should be handled with correct api response statuses
+* In memory database could be used for integration testing
+* Travis.ci for automatic builds
