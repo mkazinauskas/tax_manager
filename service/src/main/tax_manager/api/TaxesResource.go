@@ -11,6 +11,7 @@ import (
 	"time"
 	"main/tax_manager"
 	"main/tax_manager/factory"
+	"main/tax_manager/domain/commands"
 )
 
 func GetAllTaxes(factory factory.ApplicationFactory) (httprouter.Handle) {
@@ -122,11 +123,9 @@ func SaveNewMunicipalityTax(factory factory.ApplicationFactory) (httprouter.Hand
 
 		saveTaxRequest := SaveTaxRequest{}
 		unmarshalError := json.NewDecoder(r.Body).Decode(&saveTaxRequest)
-		utils.Check(unmarshalError)
-
-		existingTax := factory.TaxRepository().FindTaxByMunicipalityIdAndTaxType(municipalityId, tax.FindTaxTypeByValue(saveTaxRequest.TaxType))
-		if existingTax != nil {
-			w.WriteHeader(http.StatusConflict)
+		if unmarshalError != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: unmarshalError.Error()}))
 			return
 		}
 
@@ -140,14 +139,22 @@ func SaveNewMunicipalityTax(factory factory.ApplicationFactory) (httprouter.Hand
 			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: fmt.Sprintf("Property `to` has to be in format `%s`", tax_manager.DEFAULT_DATE_FORMAT)}))
 		}
 
-		factory.TaxRepository().Save(
-			tax.Tax{
-				MunicipalityId: municipalityId,
-				From:           fromTime,
-				To:             toTime,
-				TaxType:        tax.FindTaxTypeByValue(saveTaxRequest.TaxType),
-				Value:          saveTaxRequest.Value})
+		newTax := tax.Tax{
+			MunicipalityId: municipalityId,
+			From:           fromTime,
+			To:             toTime,
+			TaxType:        tax.FindTaxTypeByValue(saveTaxRequest.TaxType),
+			Value:          saveTaxRequest.Value}
+
+		isExistingTax := factory.TaxRepository().IsExistingTax(newTax)
+		if isExistingTax {
+			w.WriteHeader(http.StatusConflict)
+			return
+		}
+
+		commands.NewSaveTax(newTax, factory).Handle()
 
 		w.WriteHeader(http.StatusCreated)
+		//Location header with id has to be added... Don't know how to add to headers....
 	}
 }

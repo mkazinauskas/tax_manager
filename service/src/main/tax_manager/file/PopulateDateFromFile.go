@@ -50,10 +50,11 @@ func (this populateDataFromFile) Populate(filePath string) {
 		parsedTax := this.parseTax(row, header)
 		log.Println(fmt.Sprintf("Parsed tax `%s`", parsedTax))
 
-		commands.NewSaveMunicipalityAndTax(
-			parsedMunicipality,
-			parsedTax,
-			this.applicationFactory).Handle()
+		savedMunicipality :=commands.NewSaveMunicipality(parsedMunicipality, this.applicationFactory).Handle()
+
+		parsedTax.MunicipalityId = savedMunicipality.Id
+
+		commands.NewSaveTax(parsedTax, this.applicationFactory).Handle()
 	}
 }
 

@@ -4,11 +4,12 @@ import (
 	"net/http"
 	"github.com/julienschmidt/httprouter"
 	"fmt"
-	"main/tax_manager/domain/municipality"
 	"strconv"
 	"main/tax_manager/utils"
 	"encoding/json"
 	"main/tax_manager/factory"
+	"main/tax_manager/domain/commands"
+	"main/tax_manager/domain/municipality"
 )
 
 func GetAllMunicipalities(factory factory.ApplicationFactory) (httprouter.Handle) {
@@ -33,9 +34,11 @@ func SaveNewMunicipality(factory factory.ApplicationFactory) (httprouter.Handle)
 			w.WriteHeader(http.StatusConflict)
 			return
 		}
-		factory.MunicipalityRepository().Save(municipality.Municipality{Name: saveMunicipalityRequest.Name})
+		municipalityToSave := municipality.Municipality{Name: saveMunicipalityRequest.Name}
+		commands.NewSaveMunicipality(municipalityToSave, factory).Handle()
 
 		w.WriteHeader(http.StatusCreated)
+		//Location header with id has to be added... Don't know how to add to headers....
 	}
 }
 
@@ -65,7 +68,6 @@ func DeleteMunicipalityById(factory factory.ApplicationFactory) (httprouter.Hand
 			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: municipalityIdError.Error()}))
 			return
 		}
-
 
 		foundMunicipality := factory.MunicipalityRepository().FindById(municipalityId)
 		if foundMunicipality == nil {

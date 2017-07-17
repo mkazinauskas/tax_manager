@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"time"
 	"main/tax_manager"
+	"log"
 )
 
 type mySQLTaxRepository struct {
@@ -19,6 +20,7 @@ func NewMySQLTaxRepository() (TaxRepository) {
 func (this mySQLTaxRepository) IsExistingTax(tax Tax) (bool) {
 	existingTaxes := this.FindTaxByMunicipalityId(tax.MunicipalityId)
 	for _, existingTax := range existingTaxes {
+		log.Println("Comparing ", tax, " to ",existingTax)
 		if existingTax.TaxType == tax.TaxType && existingTax.From == tax.From && existingTax.To == tax.To {
 			return true
 		}
