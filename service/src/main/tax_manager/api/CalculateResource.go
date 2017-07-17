@@ -12,14 +12,11 @@ import (
 )
 
 func CalculateTax(factory factory.ApplicationFactory) (httprouter.Handle) {
+	municipalityRepository := factory.MunicipalityRepository()
+	taxRepository := factory.TaxRepository()
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		queryValues := r.URL.Query()
 		municipalityName := queryValues.Get("municipalityName")
-		log.Println(municipalityName)
-
-		municipalityRepository := factory.MunicipalityRepository()
-
-		taxRepository := factory.TaxRepository()
 
 		if &municipalityName == nil {
 			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: "No `municipalityName` as request param was not found"}))

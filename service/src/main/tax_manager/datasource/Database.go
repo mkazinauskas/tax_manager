@@ -5,11 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"main/tax_manager/utils"
 	"log"
-)
-
-const (
-	driverName     = "mysql"
-	dataSourceName = "root:@/tax_manager?charset=utf8&parseTime=True&loc=Local"
+	"main/tax_manager"
 )
 
 type Database struct {
@@ -49,7 +45,7 @@ func (this Database) Query(query string, args ... interface{}) (*sql.Rows) {
 }
 
 func (Database) acquireConnection() *sql.DB {
-	db, fault := sql.Open(driverName, dataSourceName)
+	db, fault := sql.Open(tax_manager.DRIVER_NAME, tax_manager.DATA_SOURCE_NAME)
 	utils.Check(fault)
 	return db
 }

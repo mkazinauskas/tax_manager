@@ -41,10 +41,14 @@ func SaveNewMunicipality(factory factory.ApplicationFactory) (httprouter.Handle)
 
 func GetMunicipalityById(factory factory.ApplicationFactory) (httprouter.Handle) {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		value, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
-		utils.Check(err)
+		municipalityId, municipalityIdError := strconv.ParseInt(ps.ByName("id"), 10, 64)
+		if municipalityIdError != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: municipalityIdError.Error()}))
+			return
+		}
 
-		foundMunicipality := factory.MunicipalityRepository().FindById(value)
+		foundMunicipality := factory.MunicipalityRepository().FindById(municipalityId)
 		if foundMunicipality == nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
@@ -55,10 +59,15 @@ func GetMunicipalityById(factory factory.ApplicationFactory) (httprouter.Handle)
 
 func DeleteMunicipalityById(factory factory.ApplicationFactory) (httprouter.Handle) {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		value, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
-		utils.Check(err)
+		municipalityId, municipalityIdError := strconv.ParseInt(ps.ByName("id"), 10, 64)
+		if municipalityIdError != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: municipalityIdError.Error()}))
+			return
+		}
 
-		foundMunicipality := factory.MunicipalityRepository().FindById(value)
+
+		foundMunicipality := factory.MunicipalityRepository().FindById(municipalityId)
 		if foundMunicipality == nil {
 			w.WriteHeader(http.StatusNotFound)
 			return

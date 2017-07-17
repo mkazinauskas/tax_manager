@@ -15,21 +15,40 @@ import (
 
 func GetAllTaxes(factory factory.ApplicationFactory) (httprouter.Handle) {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		value, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
+		municipalityId, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: err.Error()}))
+			return
+		}
 		utils.Check(err)
 
-		taxes := factory.TaxRepository().FindTaxByMunicipalityId(value)
+		foundMunicipality := factory.MunicipalityRepository().FindById(municipalityId)
+		if foundMunicipality == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		taxes := factory.TaxRepository().FindTaxByMunicipalityId(municipalityId)
 		fmt.Fprint(w, Marshal(taxes))
 	}
 }
 
 func GetTaxById(factory factory.ApplicationFactory) (httprouter.Handle) {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		municipalityId, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
-		utils.Check(err)
+		municipalityId, municipalityIdError := strconv.ParseInt(ps.ByName("id"), 10, 64)
+		if municipalityIdError != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: municipalityIdError.Error()}))
+			return
+		}
 
-		taxId, err := strconv.ParseInt(ps.ByName("tax-id"), 10, 64)
-		utils.Check(err)
+		taxId, taxIdError := strconv.ParseInt(ps.ByName("tax-id"), 10, 64)
+		if taxIdError != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: taxIdError.Error()}))
+			return
+		}
 
 		foundMunicipality := factory.MunicipalityRepository().FindById(municipalityId)
 		if foundMunicipality == nil {
@@ -48,11 +67,19 @@ func GetTaxById(factory factory.ApplicationFactory) (httprouter.Handle) {
 
 func DeleteTaxById(factory factory.ApplicationFactory) (httprouter.Handle) {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		municipalityId, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
-		utils.Check(err)
+		municipalityId, municipalityIdError := strconv.ParseInt(ps.ByName("id"), 10, 64)
+		if municipalityIdError != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: municipalityIdError.Error()}))
+			return
+		}
 
-		taxId, err := strconv.ParseInt(ps.ByName("tax-id"), 10, 64)
-		utils.Check(err)
+		taxId, taxIdError := strconv.ParseInt(ps.ByName("tax-id"), 10, 64)
+		if taxIdError != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: taxIdError.Error()}))
+			return
+		}
 
 		foundMunicipality := factory.MunicipalityRepository().FindById(municipalityId)
 		if foundMunicipality == nil {
@@ -80,8 +107,12 @@ type SaveTaxRequest struct {
 
 func SaveNewMunicipalityTax(factory factory.ApplicationFactory) (httprouter.Handle) {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		municipalityId, err := strconv.ParseInt(ps.ByName("id"), 10, 64)
-		utils.Check(err)
+		municipalityId, municipalityIdError := strconv.ParseInt(ps.ByName("id"), 10, 64)
+		if (municipalityIdError != nil) {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: municipalityIdError.Error()}))
+			return
+		}
 
 		foundMunicipality := factory.MunicipalityRepository().FindById(municipalityId)
 		if foundMunicipality == nil {
