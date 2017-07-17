@@ -16,17 +16,17 @@ func CalculateTax(factory factory.ApplicationFactory) (httprouter.Handle) {
 	taxRepository := factory.TaxRepository()
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		queryValues := r.URL.Query()
-		municipalityName := queryValues.Get("municipalityName")
+		municipalityName := queryValues.Get("municipality-name")
 
 		if &municipalityName == nil {
-			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: "No `municipalityName` as request param was not found"}))
-			log.Println("No `municipalityName` as request param was not found")
+			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: "No `municipality-name` as request param was not found"}))
+			log.Println("No `municipality-name` as request param was not found")
 			return
 		}
 
 		if municipalityRepository.FindByName(municipalityName) == nil {
 			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: fmt.Sprintf("No `municipality` found with name `%s`", municipalityName)}))
-			log.Println("No `municipalityName` as request param was not found")
+			log.Println("No `municipality-name` as request param was not found")
 			return
 		}
 

@@ -108,7 +108,7 @@ type SaveTaxRequest struct {
 func SaveNewMunicipalityTax(factory factory.ApplicationFactory) (httprouter.Handle) {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		municipalityId, municipalityIdError := strconv.ParseInt(ps.ByName("id"), 10, 64)
-		if (municipalityIdError != nil) {
+		if municipalityIdError != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprint(w, Marshal(ErrorResponse{ErrorMessage: municipalityIdError.Error()}))
 			return
