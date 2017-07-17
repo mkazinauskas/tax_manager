@@ -11,6 +11,10 @@ func NewStubTaxRepository(stubbedTax Tax) (TaxRepository) {
 func (this stubTaxRepository) Save(tax Tax) {
 }
 
+func (this stubTaxRepository) IsExistingTax(tax Tax)(bool){
+	return false
+}
+
 func (this stubTaxRepository) FindTaxByMunicipalityIdAndTaxType(id int64, taxType TaxType) ([]Tax) {
 	return []Tax{this.stubbedTax}
 }

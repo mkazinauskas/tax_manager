@@ -12,8 +12,18 @@ type mySQLTaxRepository struct {
 	database datasource.Database
 }
 
-func NewMySQLTaxRepository()(TaxRepository){
+func NewMySQLTaxRepository() (TaxRepository) {
 	return mySQLTaxRepository{}
+}
+
+func (this mySQLTaxRepository) IsExistingTax(tax Tax) (bool) {
+	existingTaxes := this.FindTaxByMunicipalityId(tax.MunicipalityId)
+	for _, existingTax := range existingTaxes {
+		if existingTax.TaxType == tax.TaxType && existingTax.From == tax.From && existingTax.To == tax.To {
+			return true
+		}
+	}
+	return false
 }
 
 func (this mySQLTaxRepository) Save(tax Tax) {

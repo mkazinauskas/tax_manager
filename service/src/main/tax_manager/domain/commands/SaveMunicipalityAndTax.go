@@ -3,6 +3,8 @@ package commands
 import (
 	"main/tax_manager/domain/municipality"
 	"main/tax_manager/domain/tax"
+	"main/tax_manager/factory"
+	"log"
 )
 
 type saveMunicipalityAndTax struct {
@@ -14,13 +16,13 @@ type saveMunicipalityAndTax struct {
 
 func NewSaveMunicipalityAndTax(municipalityToSave municipality.Municipality,
 	taxToSave tax.Tax,
-	municipalityRepository municipality.MunicipalityRepository,
-	taxRepository tax.TaxRepository) (saveMunicipalityAndTax) {
+	factory factory.ApplicationFactory) (saveMunicipalityAndTax) {
+
 	return saveMunicipalityAndTax{
 		municipalityToSave:     municipalityToSave,
 		taxToSave:              taxToSave,
-		municipalityRepository: municipalityRepository,
-		taxRepository:          taxRepository,
+		municipalityRepository: factory.MunicipalityRepository(),
+		taxRepository:          factory.TaxRepository(),
 	}
 }
 
@@ -31,8 +33,9 @@ func (this saveMunicipalityAndTax) Handle() {
 	}
 
 	this.taxToSave.MunicipalityId = savedMunicipality.Id
-	existingTaxes := this.taxRepository.FindTaxByMunicipalityIdAndTaxType(savedMunicipality.Id, this.taxToSave.TaxType)
-	if len(existingTaxes) == 0 {
-		this.taxRepository.Save(this.taxToSave)
+	if this.taxRepository.IsExistingTax(this.taxToSave) {
+		log.Println("Such tax already exsit", this.taxToSave)
+		return
 	}
+	this.taxRepository.Save(this.taxToSave)
 }

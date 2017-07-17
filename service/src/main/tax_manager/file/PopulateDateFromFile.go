@@ -53,8 +53,7 @@ func (this populateDataFromFile) Populate(filePath string) {
 		commands.NewSaveMunicipalityAndTax(
 			parsedMunicipality,
 			parsedTax,
-			this.applicationFactory.MunicipalityRepository(),
-			this.applicationFactory.TaxRepository()).Handle()
+			this.applicationFactory).Handle()
 	}
 }
 
