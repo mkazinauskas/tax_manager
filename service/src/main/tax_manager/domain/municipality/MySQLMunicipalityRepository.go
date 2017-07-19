@@ -20,7 +20,7 @@ func (this mySQLMunicipalityRepository) Save(municipality Municipality) (*Munici
 	id, err := result.LastInsertId()
 	utils.Check(err)
 
-	return &Municipality{Id: id, Name: municipality.Name}
+	return NewMunicipality(id, municipality.Name)
 }
 
 func (this mySQLMunicipalityRepository) FindByName(name string) (*Municipality) {
@@ -60,7 +60,7 @@ func mapTo(result *sql.Rows) ([]Municipality) {
 		var id int64
 		var name string
 		result.Scan(&id, &name)
-		municipalities = append(municipalities, Municipality{Id: id, Name: name})
+		municipalities = append(municipalities, *NewMunicipality(id, name))
 	}
 	return municipalities
 }

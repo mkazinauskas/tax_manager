@@ -10,14 +10,15 @@ import (
 func TestCalculateNoTax(testContext *testing.T) {
 	taxCalculationTime := utils.ParseDate("2015.01.01")
 
-	municipalityRepository := municipality.NewStubMunicipalityRepository(municipality.NewMunicipality(1, "Vilnius"))
+	municipalityRepository := municipality.NewStubMunicipalityRepository(*municipality.NewMunicipality(1, "Vilnius"))
 
-	taxRepository := tax.NewStubTaxRepository(tax.Tax{
-		From:    utils.ParseDate("2016.01.01"),
-		To:      utils.ParseDate("2016.12.31"),
-		TaxType: tax.YEARLY,
-		Value:   0.1,
-	})
+	taxRepository := tax.NewStubTaxRepository(
+		tax.NewTax(0,
+			1,
+			utils.ParseDate("2016.01.01"),
+			utils.ParseDate("2016.12.31"),
+			tax.YEARLY,
+			0.1))
 
 	taxRate := NewCalculateTax(municipalityRepository, taxRepository).Calculate("Vilnius", taxCalculationTime)
 	if taxRate != 0.0 {
@@ -28,14 +29,15 @@ func TestCalculateNoTax(testContext *testing.T) {
 func TestCalculateYearlyTax(testContext *testing.T) {
 	taxCalculationTime := utils.ParseDate("2016.01.01")
 
-	municipalityRepository := municipality.NewStubMunicipalityRepository(municipality.NewMunicipality(1, "Vilnius"))
+	municipalityRepository := municipality.NewStubMunicipalityRepository(*municipality.NewMunicipality(1, "Vilnius"))
 
-	taxRepository := tax.NewStubTaxRepository(tax.Tax{
-		From:    utils.ParseDate("2016.01.01"),
-		To:      utils.ParseDate("2016.12.31"),
-		TaxType: tax.YEARLY,
-		Value:   0.2,
-	})
+	taxRepository := tax.NewStubTaxRepository(
+		tax.NewTax(0,
+			1,
+			utils.ParseDate("2016.01.01"),
+			utils.ParseDate("2016.12.31"),
+			tax.YEARLY,
+			0.2))
 
 	taxRate := NewCalculateTax(municipalityRepository, taxRepository).Calculate("Vilnius", taxCalculationTime)
 	if taxRate != 0.2 {
@@ -46,14 +48,15 @@ func TestCalculateYearlyTax(testContext *testing.T) {
 func TestCalculateMonthlyTax(testContext *testing.T) {
 	taxCalculationTime := utils.ParseDate("2016.05.02")
 
-	municipalityRepository := municipality.NewStubMunicipalityRepository(municipality.NewMunicipality(1, "Vilnius"))
+	municipalityRepository := municipality.NewStubMunicipalityRepository(*municipality.NewMunicipality(1, "Vilnius"))
 
-	taxRepository := tax.NewStubTaxRepository(tax.Tax{
-		From:    utils.ParseDate("2016.05.01"),
-		To:      utils.ParseDate("2016.05.31"),
-		TaxType: tax.MONTHLY,
-		Value:   0.4,
-	})
+	taxRepository := tax.NewStubTaxRepository(
+		tax.NewTax(0,
+			1,
+			utils.ParseDate("2016.05.01"),
+			utils.ParseDate("2016.05.31"),
+			tax.MONTHLY,
+			0.4))
 
 	taxRate := NewCalculateTax(municipalityRepository, taxRepository).Calculate("Vilnius", taxCalculationTime)
 	if taxRate != 0.4 {
@@ -64,14 +67,15 @@ func TestCalculateMonthlyTax(testContext *testing.T) {
 func TestCalculateDailyTax(testContext *testing.T) {
 	taxCalculationTime := utils.ParseDate("2016.01.01")
 
-	municipalityRepository := municipality.NewStubMunicipalityRepository(municipality.NewMunicipality(1, "Vilnius"))
+	municipalityRepository := municipality.NewStubMunicipalityRepository(*municipality.NewMunicipality(1, "Vilnius"))
 
-	taxRepository := tax.NewStubTaxRepository(tax.Tax{
-		From:    utils.ParseDate("2016.01.01"),
-		To:      utils.ParseDate("2016.01.01"),
-		TaxType: tax.DAILY,
-		Value:   0.1,
-	})
+	taxRepository := tax.NewStubTaxRepository(
+		tax.NewTax(0,
+			1,
+			utils.ParseDate("2016.01.01"),
+			utils.ParseDate("2016.01.01"),
+			tax.DAILY,
+			0.1))
 
 	taxRate := NewCalculateTax(municipalityRepository, taxRepository).Calculate("Vilnius", taxCalculationTime)
 	if taxRate != 0.1 {

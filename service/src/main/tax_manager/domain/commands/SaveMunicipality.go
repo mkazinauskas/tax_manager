@@ -22,7 +22,8 @@ func NewSaveMunicipality(municipalityToSave municipality.Municipality,
 	}
 }
 
-func (this saveMunicipality) Handle() (*municipality.Municipality){
+func (this saveMunicipality) Handle() (*municipality.Municipality) {
+
 	savedMunicipality := this.municipalityRepository.FindByName(this.municipalityToSave.Name)
 	if savedMunicipality == nil {
 		savedMunicipality = this.municipalityRepository.Save(this.municipalityToSave)

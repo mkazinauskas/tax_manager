@@ -29,13 +29,19 @@ func SaveNewMunicipality(factory factory.ApplicationFactory) (httprouter.Handle)
 		unmarshalError := json.NewDecoder(r.Body).Decode(&saveMunicipalityRequest)
 		utils.Check(unmarshalError)
 
+		if len(saveMunicipalityRequest.Name) == 0 {
+			fmt.Fprint(w, Marshal(
+				ErrorResponse{ErrorMessage: fmt.Sprintf("Property `name` has to be set")}))
+			return
+		}
+
 		existingMunicipality := factory.MunicipalityRepository().FindByName(saveMunicipalityRequest.Name)
 		if existingMunicipality != nil {
 			w.WriteHeader(http.StatusConflict)
 			return
 		}
-		municipalityToSave := municipality.Municipality{Name: saveMunicipalityRequest.Name}
-		commands.NewSaveMunicipality(municipalityToSave, factory).Handle()
+		municipalityToSave := municipality.NewMunicipality(0, saveMunicipalityRequest.Name)
+		commands.NewSaveMunicipality(*municipalityToSave, factory).Handle()
 
 		w.WriteHeader(http.StatusCreated)
 		//Location header with id has to be added... Don't know how to add to headers....
