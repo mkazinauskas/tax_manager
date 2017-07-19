@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"errors"
 	"main/tax_manager/utils"
+	"github.com/aodin/date"
 )
 
 type Tax struct {
@@ -33,11 +34,32 @@ func NewTax(id int64, municipalityId int64, from time.Time, to time.Time, taxTyp
 		utils.Error("Tax Type has to be set for tax")
 	}
 
+	validateDatesByTaxType(from, to, taxType)
+
 	if value == 0 {
 		utils.Error("Tax value has to be set for tax")
 	}
 
 	return Tax{Id: id, MunicipalityId: municipalityId, From: from, To: to, TaxType: taxType, Value: value}
+}
+func validateDatesByTaxType(from time.Time, to time.Time, taxType TaxType) {
+	dateRange := date.NewRange(date.FromTime(from), date.FromTime(to))
+	if (taxType == YEARLY && dateRange.Days() < 365 && dateRange.Days() > 366) {
+		wrongPeriod(taxType)
+	}
+	if (taxType == MONTHLY && dateRange.Days() < 28 && dateRange.Days() > 31) {
+		wrongPeriod(taxType)
+	}
+	if (taxType == WEEKLY && dateRange.Days() != 7) {
+		wrongPeriod(taxType)
+	}
+	if (taxType == DAILY && dateRange.Days() != 1) {
+		wrongPeriod(taxType)
+	}
+}
+
+func wrongPeriod(taxType TaxType) {
+	utils.Error("Wrong from and to date period for tax type %s", taxType)
 }
 
 type TaxType string

@@ -47,10 +47,10 @@ func (this populateDataFromFile) Populate(filePath string) {
 		parsedMunicipality := municipality.NewMunicipality(0, row[header.municipality])
 		log.Println(fmt.Sprintf("Parsed municipality `%s`", *parsedMunicipality))
 
-		parsedTax := this.parseTax(row, header)
-		log.Println(fmt.Sprintf("Parsed tax `%s`", parsedTax))
+		savedMunicipality := commands.NewSaveMunicipality(*parsedMunicipality, this.applicationFactory).Handle()
 
-		savedMunicipality :=commands.NewSaveMunicipality(*parsedMunicipality, this.applicationFactory).Handle()
+		parsedTax := this.parseTax(row, header, savedMunicipality.Id)
+		log.Println(fmt.Sprintf("Parsed tax `%s`", parsedTax))
 
 		parsedTax.MunicipalityId = savedMunicipality.Id
 
@@ -58,18 +58,14 @@ func (this populateDataFromFile) Populate(filePath string) {
 	}
 }
 
-func (populateDataFromFile) parseTax(row []string, header csvHeaderStructure) (tax.Tax) {
+func (populateDataFromFile) parseTax(row []string, header csvHeaderStructure, municipalityId int64) (tax.Tax) {
 	from := utils.ParseDate(row[header.date_from])
 	to := utils.ParseDate(row[header.date_to])
 
 	value, floatValueError := strconv.ParseFloat(row[header.value], 64)
 	utils.CheckError(floatValueError, "Failed to parse float value from `%s`", row[header.value])
 
-	return tax.Tax{
-		From:    from,
-		To:      to,
-		TaxType: tax.FindTaxTypeByValue(row[header.tax_type]),
-		Value:   value}
+	return tax.NewTax(0, municipalityId, from, to, tax.FindTaxTypeByValue(row[header.tax_type]), value)
 }
 
 func (this populateDataFromFile) validateRowsLength(rows [][]string) {
