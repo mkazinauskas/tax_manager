@@ -46,6 +46,7 @@ func (this saveTax) Handle() {
 	savedMunicipality := this.municipalityRepository.FindById(this.taxToSave.MunicipalityId)
 	if savedMunicipality == nil {
 		utils.Error("Municipality not found by id `%d`", this.taxToSave.MunicipalityId)
+		return
 	}
 
 	if this.taxRepository.IsExistingTax(this.taxToSave) {
