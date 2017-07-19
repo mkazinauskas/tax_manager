@@ -19,6 +19,9 @@ func NewCalculateTax(municipalityRepo municipality.MunicipalityRepository, taxRe
 }
 
 func (this calculateTax) Calculate(municipalityName string, date time.Time) (float64) {
+	if len(municipalityName) == 0 {
+		utils.Error("Municipality name is not present")
+	}
 	foundMunicipality := this.municipalityRepository.FindByName(municipalityName)
 	if foundMunicipality == nil {
 		utils.Error("No municipality was found by name = `%s`", municipalityName)

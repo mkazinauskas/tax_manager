@@ -19,19 +19,19 @@ func NewSaveTax(taxToSave tax.Tax, factory factory.ApplicationFactory) (saveTax)
 		utils.Error("Municipality id has to be set for tax")
 	}
 
-	if &taxToSave.From == nil {
+	if taxToSave.From.IsZero() {
 		utils.Error("Tax from value has to be set for tax")
 	}
 
-	if &taxToSave.To == nil {
+	if taxToSave.To.IsZero() {
 		utils.Error("Tax to value has to be set for tax")
 	}
 
-	if &taxToSave.Value == nil {
+	if taxToSave.Value == 0 {
 		utils.Error("Tax value has to be set for tax")
 	}
 
-	if &taxToSave.TaxType == nil || len(taxToSave.TaxType) == 0 {
+	if len(taxToSave.TaxType) == 0 {
 		utils.Error("Tax Type has to be set for tax")
 	}
 
