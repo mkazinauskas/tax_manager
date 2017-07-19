@@ -29,6 +29,12 @@ func SaveNewMunicipality(factory factory.ApplicationFactory) (httprouter.Handle)
 		unmarshalError := json.NewDecoder(r.Body).Decode(&saveMunicipalityRequest)
 		utils.Check(unmarshalError)
 
+		if len(saveMunicipalityRequest.Name) == 0 {
+			fmt.Fprint(w, Marshal(
+				ErrorResponse{ErrorMessage: fmt.Sprintf("Property `name` has to be set")}))
+			return
+		}
+
 		existingMunicipality := factory.MunicipalityRepository().FindByName(saveMunicipalityRequest.Name)
 		if existingMunicipality != nil {
 			w.WriteHeader(http.StatusConflict)
