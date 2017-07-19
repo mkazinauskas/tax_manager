@@ -45,12 +45,12 @@ func (this populateDataFromFile) Populate(filePath string) {
 		log.Println(fmt.Sprintf("Parsing row `%s`", row))
 
 		parsedMunicipality := municipality.NewMunicipality(0, row[header.municipality])
-		log.Println(fmt.Sprintf("Parsed municipality `%s`", parsedMunicipality))
+		log.Println(fmt.Sprintf("Parsed municipality `%s`", *parsedMunicipality))
 
 		parsedTax := this.parseTax(row, header)
 		log.Println(fmt.Sprintf("Parsed tax `%s`", parsedTax))
 
-		savedMunicipality :=commands.NewSaveMunicipality(parsedMunicipality, this.applicationFactory).Handle()
+		savedMunicipality :=commands.NewSaveMunicipality(*parsedMunicipality, this.applicationFactory).Handle()
 
 		parsedTax.MunicipalityId = savedMunicipality.Id
 

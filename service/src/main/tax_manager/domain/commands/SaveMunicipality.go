@@ -15,9 +15,6 @@ type saveMunicipality struct {
 
 func NewSaveMunicipality(municipalityToSave municipality.Municipality,
 	factory factory.ApplicationFactory) (saveMunicipality) {
-	if len(municipalityToSave.Name) == 0 {
-		utils.Error("Municipality name is not present")
-	}
 
 	return saveMunicipality{
 		municipalityToSave:     municipalityToSave,

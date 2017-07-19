@@ -40,8 +40,8 @@ func SaveNewMunicipality(factory factory.ApplicationFactory) (httprouter.Handle)
 			w.WriteHeader(http.StatusConflict)
 			return
 		}
-		municipalityToSave := municipality.Municipality{Name: saveMunicipalityRequest.Name}
-		commands.NewSaveMunicipality(municipalityToSave, factory).Handle()
+		municipalityToSave := municipality.NewMunicipality(0, saveMunicipalityRequest.Name)
+		commands.NewSaveMunicipality(*municipalityToSave, factory).Handle()
 
 		w.WriteHeader(http.StatusCreated)
 		//Location header with id has to be added... Don't know how to add to headers....

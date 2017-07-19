@@ -7,9 +7,9 @@ type Municipality struct {
 	Name string
 }
 
-func NewMunicipality(id int64, name string) (Municipality) {
+func NewMunicipality(id int64, name string) (*Municipality) {
 	if len(name) == 0 {
 		utils.Error("Municipality name cannot be empty")
 	}
-	return Municipality{Id: id, Name: name}
+	return &Municipality{Id: id, Name: name}
 }

@@ -15,26 +15,6 @@ type saveTax struct {
 }
 
 func NewSaveTax(taxToSave tax.Tax, factory factory.ApplicationFactory) (saveTax) {
-	if taxToSave.MunicipalityId == 0 {
-		utils.Error("Municipality id has to be set for tax")
-	}
-
-	if taxToSave.From.IsZero() {
-		utils.Error("Tax from value has to be set for tax")
-	}
-
-	if taxToSave.To.IsZero() {
-		utils.Error("Tax to value has to be set for tax")
-	}
-
-	if taxToSave.Value == 0 {
-		utils.Error("Tax value has to be set for tax")
-	}
-
-	if len(taxToSave.TaxType) == 0 {
-		utils.Error("Tax Type has to be set for tax")
-	}
-
 	return saveTax{
 		taxToSave:              taxToSave,
 		municipalityRepository: factory.MunicipalityRepository(),

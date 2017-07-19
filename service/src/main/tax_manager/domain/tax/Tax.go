@@ -4,6 +4,7 @@ import (
 	"time"
 	"fmt"
 	"errors"
+	"main/tax_manager/utils"
 )
 
 type Tax struct {
@@ -16,6 +17,26 @@ type Tax struct {
 }
 
 func NewTax(id int64, municipalityId int64, from time.Time, to time.Time, taxType TaxType, value float64) (Tax) {
+	if municipalityId == 0 {
+		utils.Error("Municipality id has to be set for tax")
+	}
+
+	if from.IsZero() {
+		utils.Error("Tax from value has to be set for tax")
+	}
+
+	if to.IsZero() {
+		utils.Error("Tax to value has to be set for tax")
+	}
+
+	if len(taxType) == 0 {
+		utils.Error("Tax Type has to be set for tax")
+	}
+
+	if value == 0 {
+		utils.Error("Tax value has to be set for tax")
+	}
+
 	return Tax{Id: id, MunicipalityId: municipalityId, From: from, To: to, TaxType: taxType, Value: value}
 }
 
